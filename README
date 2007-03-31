@@ -1,0 +1,24 @@
+ActsAsTsearch
+=============
+
+Lots of documentation on the sites Google code page:  http://code.google.com/p/acts-as-tsearch/
+
+Preparing your DB for TSearch: http://code.google.com/p/acts-as-tsearch/wiki/PreparingYourPostgreSQLDatabase
+
+Quick Start:  http://code.google.com/p/acts-as-tsearch/wiki/QuickStart
+
+acts_as_tsearch:  http://code.google.com/p/acts-as-tsearch/wiki/ActsAsTsearchMethod
+
+find_by_tsearch: http://code.google.com/p/acts-as-tsearch/wiki/FindByTsearchMethod
+
+Migrations: http://code.google.com/p/acts-as-tsearch/wiki/Migrations
+
+New Group: http://groups.google.com/group/acts_as_tsearch
+
+Blog: http://rubyonrain.com/acts_as_tsearch
+
+TSearch V2 Documentation: http://www.sai.msu.su/~megera/postgres/gist/tsearch/V2/
+
+Agile Web Dev page: http://www.agilewebdevelopment.com/plugins/acts_as_tsearch
+
+

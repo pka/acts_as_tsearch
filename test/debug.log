@@ -1,0 +1,1828 @@
+# Logfile created on Fri Mar 16 06:33:25 -0700 2007 by logger.rb/1.5.2.9
+  [4;36;1mSQL (0.000626)[0m   [0;1mSET client_min_messages TO 'ERROR'[0m
+  [4;35;1mSQL (0.014693)[0m   [0mDROP TABLE blog_entries[0m
+  [4;36;1mSQL (0.006148)[0m   [0;1mDROP TABLE blog_comments[0m
+  [4;35;1mSQL (0.565744)[0m   [0mDROP TABLE profiles[0m
+  [4;36;1mSQL (0.012547)[0m   [0;1mCREATE TABLE blog_entries ("id" serial primary key, "title" character varying(255) DEFAULT NULL, "description" text DEFAULT NULL) [0m
+  [4;35;1mSQL (0.008765)[0m   [0mCREATE TABLE blog_comments ("id" serial primary key, "blog_entry_id" integer DEFAULT NULL, "name" character varying(255) DEFAULT NULL, "email" character varying(255) DEFAULT NULL, "url" character varying(255) DEFAULT NULL, "comment" text DEFAULT NULL) [0m
+  [4;36;1mSQL (0.437495)[0m   [0;1mCREATE TABLE profiles ("id" serial primary key, "name" character varying(255) DEFAULT NULL, "public_info" character varying(255) DEFAULT NULL, "private_info" character varying(255) DEFAULT NULL) [0m
+  [4;35;1mSQL (0.000000)[0m   [0mRuntimeError: ERROR	C42P07	Mrelation "schema_info" already exists	Fheap.c	L695	Rheap_create_with_catalog: CREATE TABLE schema_info (version integer)[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mRuntimeError: ERROR	C42P07	Mrelation "plugin_schema_info" already exists	Fheap.c	L695	Rheap_create_with_catalog: CREATE TABLE plugin_schema_info 
+ (plugin_name character varying(255), version integer)
+[0m
+  [4;35;1mSQL (0.004630)[0m   [0m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'schema_info'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;36;1mSQL (0.001767)[0m   [0;1mUPDATE schema_info SET version = 1[0m
+  [4;35;1mSQL (0.001734)[0m   [0m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'blog_entries'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;36;1mSQL (0.002267)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'blog_comments'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mSQL (0.000299)[0m   [0mBEGIN[0m
+  [4;36;1mSQL (0.019035)[0m   [0;1malter table blog_entries add column vectors tsvector[0m
+  [4;35;1mSQL (0.038514)[0m   [0mCREATE INDEX blog_entries_fts_vectors_index ON blog_entries USING gist(vectors)[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mRuntimeError: ERROR	C42703	Mcolumn "oid" does not exist	WSQL statement "select oid from public.pg_ts_cfg where ts_name = $1"	Fparse_expr.c	L396	RtransformColumnRef: update blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'') || ' ' || coalesce(description,'')),'A')
+ [0m
+  [4;35;1mSQL (0.000334)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000290)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.001354)[0m   [0m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'blog_entries'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;36;1mSQL (0.000855)[0m   [0;1malter table blog_entries add column vectors tsvector[0m
+  [4;35;1mSQL (0.001963)[0m   [0mCREATE INDEX blog_entries_fts_vectors_index ON blog_entries USING gist(vectors)[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mRuntimeError: ERROR	C42703	Mcolumn "oid" does not exist	WSQL statement "select oid from public.pg_ts_cfg where ts_name = $1"	Fparse_expr.c	L396	RtransformColumnRef: update blog_entries set vectors = to_tsvector('default',coalesce(title,'') || ' ' || coalesce(description,''))[0m
+  [4;35;1mSQL (0.000216)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000256)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.001290)[0m   [0m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'blog_entries'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;36;1mSQL (0.000797)[0m   [0;1malter table blog_entries add column vectors tsvector[0m
+  [4;35;1mSQL (0.002328)[0m   [0mCREATE INDEX blog_entries_fts_vectors_index ON blog_entries USING gist(vectors)[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mRuntimeError: ERROR	C42703	Mcolumn "oid" does not exist	WSQL statement "select oid from public.pg_ts_cfg where ts_name = $1"	Fparse_expr.c	L396	RtransformColumnRef: update blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'')),'A')
+ [0m
+  [4;35;1mSQL (0.000340)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000278)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.001314)[0m   [0m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'blog_entries'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;36;1mSQL (0.000256)[0m   [0;1mROLLBACK[0m
+  [4;35;1mSQL (0.000279)[0m   [0mBEGIN[0m
+  [4;36;1mSQL (0.001847)[0m   [0;1mSELECT count(*) AS count_all FROM blog_entries [0m
+  [4;35;1mSQL (0.000453)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000257)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000920)[0m   [0malter table blog_entries add column vectors tsvector[0m
+  [4;36;1mSQL (0.002547)[0m   [0;1mCREATE INDEX blog_entries_fts_vectors_index ON blog_entries USING gist(vectors)[0m
+  [4;35;1mSQL (0.000000)[0m   [0mRuntimeError: ERROR	C42703	Mcolumn "oid" does not exist	WSQL statement "select oid from public.pg_ts_cfg where ts_name = $1"	Fparse_expr.c	L396	RtransformColumnRef: update blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(blog_entries.title,'')),'A')
+ || setweight( to_tsvector('default', 
+ coalesce(blog_comments.comment,'')),'B')
+ from blog_entries b2 left outer join blog_comments on blog_comments.blog_entry_id = b2.id where b2.id = blog_entries.id[0m
+  [4;36;1mSQL (0.000378)[0m   [0;1mROLLBACK[0m
+  [4;35;1mSQL (0.000276)[0m   [0mBEGIN[0m
+  [4;36;1mSQL (0.001226)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'blog_entries'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mSQL (0.000794)[0m   [0malter table blog_entries add column vectors tsvector[0m
+  [4;36;1mSQL (0.001629)[0m   [0;1mCREATE INDEX blog_entries_fts_vectors_index ON blog_entries USING gist(vectors)[0m
+  [4;35;1mSQL (0.000000)[0m   [0mRuntimeError: ERROR	C42703	Mcolumn "oid" does not exist	WSQL statement "select oid from public.pg_ts_cfg where ts_name = $1"	Fparse_expr.c	L396	RtransformColumnRef: update blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'')),'A')
+ [0m
+  [4;36;1mSQL (0.000218)[0m   [0;1mROLLBACK[0m
+  [4;35;1mSQL (0.000187)[0m   [0mBEGIN[0m
+  [4;36;1mSQL (0.001243)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'blog_entries'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mSQL (0.000775)[0m   [0malter table blog_entries add column vectors tsvector[0m
+  [4;36;1mSQL (0.002450)[0m   [0;1mCREATE INDEX blog_entries_fts_vectors_index ON blog_entries USING gist(vectors)[0m
+  [4;35;1mSQL (0.000000)[0m   [0mRuntimeError: ERROR	C42703	Mcolumn "oid" does not exist	WSQL statement "select oid from public.pg_ts_cfg where ts_name = $1"	Fparse_expr.c	L396	RtransformColumnRef: update blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'') || ' ' || coalesce(description,'')),'A')
+ [0m
+  [4;36;1mSQL (0.000273)[0m   [0;1mROLLBACK[0m
+  [4;35;1mSQL (0.000228)[0m   [0mBEGIN[0m
+  [4;36;1mSQL (0.001379)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'profiles'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mSQL (0.004737)[0m   [0malter table profiles add column private_vector tsvector[0m
+  [4;36;1mSQL (0.062944)[0m   [0;1mCREATE INDEX profiles_fts_private_vector_index ON profiles USING gist(private_vector)[0m
+  [4;35;1mSQL (0.000000)[0m   [0mRuntimeError: ERROR	C42703	Mcolumn "oid" does not exist	WSQL statement "select oid from public.pg_ts_cfg where ts_name = $1"	Fparse_expr.c	L396	RtransformColumnRef: update profiles set private_vector = to_tsvector('default',coalesce(name,'') || ' ' || coalesce(private_info,''))[0m
+  [4;36;1mSQL (0.000318)[0m   [0;1mROLLBACK[0m
+  [4;35;1mSQL (0.000289)[0m   [0mBEGIN[0m
+  [4;36;1mSQL (0.001246)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'blog_entries'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mSQL (0.001783)[0m   [0malter table blog_entries add column vectors tsvector[0m
+  [4;36;1mSQL (0.001639)[0m   [0;1mCREATE INDEX blog_entries_fts_vectors_index ON blog_entries USING gist(vectors)[0m
+  [4;35;1mSQL (0.000000)[0m   [0mRuntimeError: ERROR	C42703	Mcolumn "oid" does not exist	WSQL statement "select oid from public.pg_ts_cfg where ts_name = $1"	Fparse_expr.c	L396	RtransformColumnRef: update blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'')),'A')
+ || setweight( to_tsvector('default', 
+ coalesce(description,'')),'B')
+ [0m
+  [4;36;1mSQL (0.000332)[0m   [0;1mROLLBACK[0m
+  [4;35;1mSQL (0.000227)[0m   [0mBEGIN[0m
+  [4;36;1mSQL (0.000234)[0m   [0;1mROLLBACK[0m
+  [4;35;1mSQL (0.000255)[0m   [0mBEGIN[0m
+  [4;36;1mSQL (0.000228)[0m   [0;1mROLLBACK[0m
+  [4;35;1mSQL (0.000248)[0m   [0mBEGIN[0m
+  [4;36;1mSQL (0.000228)[0m   [0;1mROLLBACK[0m
+  [4;35;1mSQL (0.000224)[0m   [0mBEGIN[0m
+  [4;36;1mSQL (0.000230)[0m   [0;1mROLLBACK[0m
+  [4;35;1mSQL (0.000224)[0m   [0mBEGIN[0m
+  [4;36;1mSQL (0.000250)[0m   [0;1mROLLBACK[0m
+  [4;35;1mSQL (0.000228)[0m   [0mBEGIN[0m
+  [4;36;1mSQL (0.000218)[0m   [0;1mROLLBACK[0m
+  [4;35;1mSQL (0.000223)[0m   [0mBEGIN[0m
+  [4;36;1mSQL (0.000242)[0m   [0;1mROLLBACK[0m
+  [4;35;1mSQL (0.000261)[0m   [0mBEGIN[0m
+  [4;36;1mSQL (0.000261)[0m   [0;1mROLLBACK[0m
+  [4;35;1mSQL (0.000226)[0m   [0mBEGIN[0m
+  [4;36;1mSQL (0.000397)[0m   [0;1mROLLBACK[0m
+  [4;35;1mSQL (0.000225)[0m   [0mBEGIN[0m
+  [4;36;1mSQL (0.000230)[0m   [0;1mROLLBACK[0m
+  [4;35;1mSQL (0.000225)[0m   [0mBEGIN[0m
+  [4;36;1mSQL (0.000229)[0m   [0;1mROLLBACK[0m
+  [4;35;1mSQL (0.000224)[0m   [0mBEGIN[0m
+  [4;36;1mSQL (0.000242)[0m   [0;1mROLLBACK[0m
+  [4;35;1mSQL (0.000222)[0m   [0mBEGIN[0m
+  [4;36;1mSQL (0.000229)[0m   [0;1mROLLBACK[0m
+  [4;35;1mSQL (0.000220)[0m   [0mBEGIN[0m
+  [4;36;1mSQL (0.000235)[0m   [0;1mROLLBACK[0m
+  [4;35;1mSQL (0.000223)[0m   [0mBEGIN[0m
+  [4;36;1mSQL (0.000234)[0m   [0;1mROLLBACK[0m
+  [4;35;1mSQL (0.000206)[0m   [0mBEGIN[0m
+  [4;36;1mSQL (0.000213)[0m   [0;1mROLLBACK[0m
+  [4;35;1mSQL (0.000203)[0m   [0mBEGIN[0m
+  [4;36;1mSQL (0.000211)[0m   [0;1mROLLBACK[0m
+  [4;35;1mSQL (0.000204)[0m   [0mBEGIN[0m
+  [4;36;1mSQL (0.000196)[0m   [0;1mROLLBACK[0m
+  [4;35;1mSQL (0.000190)[0m   [0mBEGIN[0m
+  [4;36;1mSQL (0.000195)[0m   [0;1mROLLBACK[0m
+  [4;35;1mSQL (0.000213)[0m   [0mBEGIN[0m
+  [4;36;1mSQL (0.000204)[0m   [0;1mROLLBACK[0m
+  [4;35;1mSQL (0.000189)[0m   [0mBEGIN[0m
+  [4;36;1mSQL (0.000199)[0m   [0;1mROLLBACK[0m
+  [4;35;1mSQL (0.000179)[0m   [0mBEGIN[0m
+  [4;36;1mSQL (0.000217)[0m   [0;1mROLLBACK[0m
+  [4;35;1mSQL (0.000176)[0m   [0mBEGIN[0m
+  [4;36;1mSQL (0.000549)[0m   [0;1mROLLBACK[0m
+  [4;35;1mSQL (0.000192)[0m   [0mBEGIN[0m
+  [4;36;1mSQL (0.000186)[0m   [0;1mROLLBACK[0m
+  [4;35;1mSQL (0.000181)[0m   [0mBEGIN[0m
+  [4;36;1mSQL (0.000186)[0m   [0;1mROLLBACK[0m
+  [4;35;1mSQL (0.000177)[0m   [0mBEGIN[0m
+  [4;36;1mSQL (0.000185)[0m   [0;1mROLLBACK[0m
+  [4;35;1mSQL (0.000175)[0m   [0mBEGIN[0m
+  [4;36;1mSQL (0.000194)[0m   [0;1mROLLBACK[0m
+  [4;35;1mSQL (0.000174)[0m   [0mBEGIN[0m
+  [4;36;1mSQL (0.000182)[0m   [0;1mROLLBACK[0m
+  [4;35;1mSQL (0.000174)[0m   [0mBEGIN[0m
+  [4;36;1mSQL (0.000173)[0m   [0;1mROLLBACK[0m
+  [4;35;1mSQL (0.000176)[0m   [0mBEGIN[0m
+  [4;36;1mSQL (0.000194)[0m   [0;1mROLLBACK[0m
+  [4;35;1mSQL (0.000177)[0m   [0mBEGIN[0m
+  [4;36;1mSQL (0.000193)[0m   [0;1mROLLBACK[0m
+  [4;35;1mSQL (0.000203)[0m   [0mBEGIN[0m
+  [4;36;1mSQL (0.000184)[0m   [0;1mROLLBACK[0m
+  [4;35;1mSQL (0.000183)[0m   [0mBEGIN[0m
+  [4;36;1mSQL (0.000223)[0m   [0;1mROLLBACK[0m
+  [4;35;1mSQL (0.000228)[0m   [0mBEGIN[0m
+  [4;36;1mSQL (0.000194)[0m   [0;1mROLLBACK[0m
+  [4;35;1mSQL (0.000229)[0m   [0mBEGIN[0m
+  [4;36;1mSQL (0.000189)[0m   [0;1mROLLBACK[0m
+  [4;35;1mSQL (0.000205)[0m   [0mBEGIN[0m
+  [4;36;1mSQL (0.000188)[0m   [0;1mROLLBACK[0m
+  [4;35;1mSQL (0.000181)[0m   [0mBEGIN[0m
+  [4;36;1mSQL (0.000190)[0m   [0;1mROLLBACK[0m
+  [4;35;1mSQL (0.000179)[0m   [0mBEGIN[0m
+  [4;36;1mSQL (0.000185)[0m   [0;1mROLLBACK[0m
+  [4;35;1mSQL (0.000185)[0m   [0mBEGIN[0m
+  [4;36;1mSQL (0.000188)[0m   [0;1mROLLBACK[0m
+  [4;35;1mSQL (0.000226)[0m   [0mBEGIN[0m
+  [4;36;1mSQL (0.000185)[0m   [0;1mROLLBACK[0m
+  [4;35;1mSQL (0.000175)[0m   [0mBEGIN[0m
+  [4;36;1mSQL (0.000342)[0m   [0;1mROLLBACK[0m
+  [4;35;1mSQL (0.000249)[0m   [0mBEGIN[0m
+  [4;36;1mDnsDomain Load (0.002415)[0m   [0;1mSELECT * FROM dns_domains WHERE (dns_domains."name" = 'bob.com') LIMIT 1[0m
+  [4;35;1mSQL (0.002012)[0m   [0m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'dns_domains'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;36;1mDnsDomain Load (0.001218)[0m   [0;1mSELECT * FROM dns_domains WHERE (dns_domains."name" = 'bob.com') LIMIT 1[0m
+  [4;35;1mPK and serial sequence (0.007450)[0m   [0m SELECT attr.attname, name.nspname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relnamespace = name.oid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'dns_domains'::regclass
+[0m
+  [4;36;1mDnsDomain Create (0.000820)[0m   [0;1mINSERT INTO dns_domains ("name", "dtype", "account", "last_check", "master", "notified_serial") VALUES('bob.com', NULL, NULL, NULL, NULL, NULL)[0m
+  [4;35;1mSQL (0.000686)[0m   [0mSELECT currval('dns_domains_id_seq')[0m
+  [4;36;1mDnsDomain Update (0.000545)[0m   [0;1mUPDATE dns_domains SET "last_check" = NULL, "account" = NULL, "notified_serial" = NULL, "name" = 'bob.com', "dtype" = NULL, "master" = NULL WHERE id = 1[0m
+  [4;35;1mDnsDomain Load (0.000958)[0m   [0mSELECT * FROM dns_domains WHERE (dns_domains."name" = 'bob.com') LIMIT 1[0m
+  [4;36;1mDnsRecord Load (0.001704)[0m   [0;1mSELECT * FROM dns_records WHERE (dns_records.dns_domain_id = 1) [0m
+  [4;35;1mDnsDomain Destroy (0.000381)[0m   [0m DELETE FROM dns_domains
+ WHERE id = 1
+[0m
+  [4;36;1mDnsDomain Load (0.001147)[0m   [0;1mSELECT * FROM dns_domains WHERE (dns_domains."name" = 'bob.com') LIMIT 1[0m
+  [4;35;1mDnsDomain Load (0.000963)[0m   [0mSELECT * FROM dns_domains WHERE (dns_domains."name" = 'bob.com') LIMIT 1[0m
+  [4;36;1mDnsDomain Load (0.001024)[0m   [0;1mSELECT * FROM dns_domains WHERE (dns_domains."name" = 'bob.com') LIMIT 1[0m
+  [4;35;1mDnsDomain Create (0.000421)[0m   [0mINSERT INTO dns_domains ("name", "dtype", "account", "last_check", "master", "notified_serial") VALUES('bob.com', NULL, NULL, NULL, NULL, NULL)[0m
+  [4;36;1mSQL (0.000445)[0m   [0;1mSELECT currval('dns_domains_id_seq')[0m
+  [4;35;1mDnsDomain Update (0.000487)[0m   [0mUPDATE dns_domains SET "last_check" = NULL, "account" = NULL, "notified_serial" = NULL, "name" = 'bob.com', "dtype" = NULL, "master" = NULL WHERE id = 2[0m
+  [4;36;1mDnsDomain Load (0.001094)[0m   [0;1mSELECT * FROM dns_domains WHERE (dns_domains."name" = 'bob.com') LIMIT 1[0m
+  [4;35;1mDnsRecord Load (0.000976)[0m   [0mSELECT * FROM dns_records WHERE (dns_records.dns_domain_id = 2) [0m
+  [4;36;1mDnsDomain Destroy (0.000365)[0m   [0;1m DELETE FROM dns_domains
+ WHERE id = 2
+[0m
+  [4;35;1mDnsDomain Load (0.001081)[0m   [0mSELECT * FROM dns_domains WHERE (dns_domains."name" = 'bob.com') LIMIT 1[0m
+  [4;36;1mDnsDomain Load (0.000899)[0m   [0;1mSELECT * FROM dns_domains WHERE (dns_domains."name" = 'bob.com') LIMIT 1[0m
+  [4;35;1mDnsDomain Load (0.000883)[0m   [0mSELECT * FROM dns_domains WHERE (dns_domains."name" = 'bob.com') LIMIT 1[0m
+  [4;36;1mDnsDomain Create (0.000355)[0m   [0;1mINSERT INTO dns_domains ("name", "dtype", "account", "last_check", "master", "notified_serial") VALUES('bob.com', NULL, NULL, NULL, NULL, NULL)[0m
+  [4;35;1mSQL (0.000383)[0m   [0mSELECT currval('dns_domains_id_seq')[0m
+  [4;36;1mDnsDomain Update (0.000380)[0m   [0;1mUPDATE dns_domains SET "last_check" = NULL, "account" = NULL, "notified_serial" = NULL, "name" = 'bob.com', "dtype" = NULL, "master" = NULL WHERE id = 3[0m
+  [4;35;1mDnsDomain Load (0.000862)[0m   [0mSELECT * FROM dns_domains WHERE (dns_domains."name" = 'bob.com') LIMIT 1[0m
+  [4;36;1mDnsRecord Load (0.000838)[0m   [0;1mSELECT * FROM dns_records WHERE (dns_records.dns_domain_id = 3) [0m
+  [4;35;1mDnsDomain Destroy (0.000298)[0m   [0m DELETE FROM dns_domains
+ WHERE id = 3
+[0m
+  [4;36;1mDnsDomain Load (0.000780)[0m   [0;1mSELECT * FROM dns_domains WHERE (dns_domains."name" = 'bob.com') LIMIT 1[0m
+  [4;35;1mDnsDomain Load (0.000795)[0m   [0mSELECT * FROM dns_domains WHERE (dns_domains."name" = 'bob.com') LIMIT 1[0m
+  [4;36;1mDnsDomain Load (0.000814)[0m   [0;1mSELECT * FROM dns_domains WHERE (dns_domains."name" = 'bob.com') LIMIT 1[0m
+  [4;35;1mDnsDomain Create (0.000313)[0m   [0mINSERT INTO dns_domains ("name", "dtype", "account", "last_check", "master", "notified_serial") VALUES('bob.com', NULL, NULL, NULL, NULL, NULL)[0m
+  [4;36;1mSQL (0.000364)[0m   [0;1mSELECT currval('dns_domains_id_seq')[0m
+  [4;35;1mDnsDomain Update (0.000395)[0m   [0mUPDATE dns_domains SET "last_check" = NULL, "account" = NULL, "notified_serial" = NULL, "name" = 'bob.com', "dtype" = NULL, "master" = NULL WHERE id = 4[0m
+  [4;36;1mDnsDomain Load (0.000907)[0m   [0;1mSELECT * FROM dns_domains WHERE (dns_domains."name" = 'bob.com') LIMIT 1[0m
+  [4;35;1mDnsRecord Load (0.000803)[0m   [0mSELECT * FROM dns_records WHERE (dns_records.dns_domain_id = 4) [0m
+  [4;36;1mDnsDomain Destroy (0.000290)[0m   [0;1m DELETE FROM dns_domains
+ WHERE id = 4
+[0m
+  [4;35;1mDnsDomain Load (0.000805)[0m   [0mSELECT * FROM dns_domains WHERE (dns_domains."name" = 'bob.com') LIMIT 1[0m
+  [4;36;1mDnsDomain Load (0.000803)[0m   [0;1mSELECT * FROM dns_domains WHERE (dns_domains."name" = 'bob.com') LIMIT 1[0m
+  [4;35;1mDnsDomain Load (0.000800)[0m   [0mSELECT * FROM dns_domains WHERE (dns_domains."name" = 'bob.com') LIMIT 1[0m
+  [4;36;1mDnsDomain Create (0.000372)[0m   [0;1mINSERT INTO dns_domains ("name", "dtype", "account", "last_check", "master", "notified_serial") VALUES('bob.com', NULL, NULL, NULL, NULL, NULL)[0m
+  [4;35;1mSQL (0.000374)[0m   [0mSELECT currval('dns_domains_id_seq')[0m
+  [4;36;1mDnsDomain Update (0.000425)[0m   [0;1mUPDATE dns_domains SET "last_check" = NULL, "account" = NULL, "notified_serial" = NULL, "name" = 'bob.com', "dtype" = NULL, "master" = NULL WHERE id = 5[0m
+  [4;35;1mDnsDomain Load (0.000932)[0m   [0mSELECT * FROM dns_domains WHERE (dns_domains."name" = 'bob.com') LIMIT 1[0m
+  [4;36;1mDnsRecord Load (0.000801)[0m   [0;1mSELECT * FROM dns_records WHERE (dns_records.dns_domain_id = 5) [0m
+  [4;35;1mDnsDomain Destroy (0.000296)[0m   [0m DELETE FROM dns_domains
+ WHERE id = 5
+[0m
+  [4;36;1mDnsDomain Load (0.000843)[0m   [0;1mSELECT * FROM dns_domains WHERE (dns_domains."name" = 'bob.com') LIMIT 1[0m
+  [4;35;1mSQL (0.000198)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000220)[0m   [0;1mBEGIN[0m
+  [4;35;1mDnsDomain Load (0.001099)[0m   [0mSELECT * FROM dns_domains WHERE (dns_domains."name" = 'activerain.com') LIMIT 1[0m
+  [4;36;1mDnsDomain Load (0.000812)[0m   [0;1mSELECT * FROM dns_domains WHERE (dns_domains."name" = 'bob.activerain.com') LIMIT 1[0m
+  [4;35;1mDnsDomain Load (0.000799)[0m   [0mSELECT * FROM dns_domains WHERE (dns_domains."name" = 'bob') LIMIT 1[0m
+  [4;36;1mDnsDomain Load (0.000778)[0m   [0;1mSELECT * FROM dns_domains WHERE (dns_domains."name" = 'activerain.com') LIMIT 1[0m
+  [4;35;1mDnsDomain Load (0.000768)[0m   [0mSELECT * FROM dns_domains WHERE (dns_domains."name" = 'localism.com') LIMIT 1[0m
+  [4;36;1mDnsDomain Load (0.000777)[0m   [0;1mSELECT * FROM dns_domains WHERE (dns_domains."name" = 'agentspaces.com') LIMIT 1[0m
+  [4;35;1mDnsDomain Load (0.000780)[0m   [0mSELECT * FROM dns_domains WHERE (dns_domains."name" = 'activerain.net') LIMIT 1[0m
+  [4;36;1mDnsDomain Load (0.000871)[0m   [0;1mSELECT * FROM dns_domains WHERE (dns_domains."name" = 'bob.com') LIMIT 1[0m
+  [4;35;1mDnsDomain Create (0.000382)[0m   [0mINSERT INTO dns_domains ("name", "dtype", "account", "last_check", "master", "notified_serial") VALUES('bob.com', 'NATIVE', NULL, NULL, NULL, NULL)[0m
+  [4;36;1mSQL (0.000367)[0m   [0;1mSELECT currval('dns_domains_id_seq')[0m
+  [4;35;1mSQL (0.001808)[0m   [0m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'dns_records'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;36;1mPK and serial sequence (0.007194)[0m   [0;1m SELECT attr.attname, name.nspname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relnamespace = name.oid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'dns_records'::regclass
+[0m
+  [4;35;1mDnsRecord Create (0.000858)[0m   [0mINSERT INTO dns_records ("dns_domain_id", "name", "prio", "ttl", "rtype", "change_date", "content") VALUES(6, 'bob.com', NULL, 86400, 'SOA', NULL, 'ns1.agentspaces.com support@activerain.com 1')[0m
+  [4;36;1mSQL (0.000440)[0m   [0;1mSELECT currval('dns_records_id_seq')[0m
+  [4;35;1mDnsRecord Create (0.000361)[0m   [0mINSERT INTO dns_records ("dns_domain_id", "name", "prio", "ttl", "rtype", "change_date", "content") VALUES(6, 'bob.com', NULL, 86400, 'NS', NULL, 'ns1.agentspaces.com')[0m
+  [4;36;1mSQL (0.000360)[0m   [0;1mSELECT currval('dns_records_id_seq')[0m
+  [4;35;1mDnsRecord Create (0.000338)[0m   [0mINSERT INTO dns_records ("dns_domain_id", "name", "prio", "ttl", "rtype", "change_date", "content") VALUES(6, 'bob.com', NULL, 86400, 'NS', NULL, 'ns2.agentspaces.com')[0m
+  [4;36;1mSQL (0.000354)[0m   [0;1mSELECT currval('dns_records_id_seq')[0m
+  [4;35;1mDnsRecord Create (0.000367)[0m   [0mINSERT INTO dns_records ("dns_domain_id", "name", "prio", "ttl", "rtype", "change_date", "content") VALUES(6, 'bob.com', NULL, 21600, 'A', NULL, '72.32.234.17')[0m
+  [4;36;1mSQL (0.000358)[0m   [0;1mSELECT currval('dns_records_id_seq')[0m
+  [4;35;1mDnsRecord Create (0.000340)[0m   [0mINSERT INTO dns_records ("dns_domain_id", "name", "prio", "ttl", "rtype", "change_date", "content") VALUES(6, 'www.bob.com', NULL, 86400, 'CNAME', NULL, 'bob.com')[0m
+  [4;36;1mSQL (0.000355)[0m   [0;1mSELECT currval('dns_records_id_seq')[0m
+  [4;35;1mDnsDomain Load (0.000886)[0m   [0mSELECT * FROM dns_domains WHERE (dns_domains.id = 6) [0m
+  [4;36;1mDnsDomain Update (0.000401)[0m   [0;1mUPDATE dns_domains SET "last_check" = NULL, "account" = NULL, "notified_serial" = NULL, "name" = 'bob.com', "dtype" = 'NATIVE', "master" = NULL WHERE id = 6[0m
+  [4;35;1mDnsRecord Load (0.001415)[0m   [0mSELECT * FROM dns_records WHERE (dns_records.dns_domain_id = 6) [0m
+  [4;36;1mDnsRecord Destroy (0.000397)[0m   [0;1m DELETE FROM dns_records
+ WHERE id = 5
+[0m
+  [4;35;1mDnsRecord Destroy (0.000420)[0m   [0m DELETE FROM dns_records
+ WHERE id = 4
+[0m
+  [4;36;1mDnsRecord Destroy (0.000320)[0m   [0;1m DELETE FROM dns_records
+ WHERE id = 3
+[0m
+  [4;35;1mDnsRecord Destroy (0.000326)[0m   [0m DELETE FROM dns_records
+ WHERE id = 2
+[0m
+  [4;36;1mDnsRecord Destroy (0.000318)[0m   [0;1m DELETE FROM dns_records
+ WHERE id = 1
+[0m
+  [4;35;1mDnsDomain Destroy (0.000287)[0m   [0m DELETE FROM dns_domains
+ WHERE id = 6
+[0m
+  [4;36;1mDnsDomain Load (0.000810)[0m   [0;1mSELECT * FROM dns_domains WHERE (dns_domains."name" = 'bob.com') LIMIT 1[0m
+  [4;35;1mDnsDomain Load (0.000771)[0m   [0mSELECT * FROM dns_domains WHERE (dns_domains."name" = 'bob.com') LIMIT 1[0m
+  [4;36;1mDnsDomain Create (0.000349)[0m   [0;1mINSERT INTO dns_domains ("name", "dtype", "account", "last_check", "master", "notified_serial") VALUES('bob.com', 'NATIVE', NULL, NULL, NULL, NULL)[0m
+  [4;35;1mSQL (0.000413)[0m   [0mSELECT currval('dns_domains_id_seq')[0m
+  [4;36;1mDnsRecord Create (0.000337)[0m   [0;1mINSERT INTO dns_records ("dns_domain_id", "name", "prio", "ttl", "rtype", "change_date", "content") VALUES(7, 'bob.com', NULL, 86400, 'SOA', NULL, 'ns1.agentspaces.com support@activerain.com 1')[0m
+  [4;35;1mSQL (0.000348)[0m   [0mSELECT currval('dns_records_id_seq')[0m
+  [4;36;1mDnsRecord Create (0.000363)[0m   [0;1mINSERT INTO dns_records ("dns_domain_id", "name", "prio", "ttl", "rtype", "change_date", "content") VALUES(7, 'bob.com', NULL, 86400, 'NS', NULL, 'ns1.agentspaces.com')[0m
+  [4;35;1mSQL (0.000379)[0m   [0mSELECT currval('dns_records_id_seq')[0m
+  [4;36;1mDnsRecord Create (0.000358)[0m   [0;1mINSERT INTO dns_records ("dns_domain_id", "name", "prio", "ttl", "rtype", "change_date", "content") VALUES(7, 'bob.com', NULL, 86400, 'NS', NULL, 'ns2.agentspaces.com')[0m
+  [4;35;1mSQL (0.000357)[0m   [0mSELECT currval('dns_records_id_seq')[0m
+  [4;36;1mDnsRecord Create (0.000329)[0m   [0;1mINSERT INTO dns_records ("dns_domain_id", "name", "prio", "ttl", "rtype", "change_date", "content") VALUES(7, 'bob.com', NULL, 21600, 'A', NULL, '72.32.234.17')[0m
+  [4;35;1mSQL (0.000360)[0m   [0mSELECT currval('dns_records_id_seq')[0m
+  [4;36;1mDnsRecord Create (0.000332)[0m   [0;1mINSERT INTO dns_records ("dns_domain_id", "name", "prio", "ttl", "rtype", "change_date", "content") VALUES(7, 'www.bob.com', NULL, 86400, 'CNAME', NULL, 'bob.com')[0m
+  [4;35;1mSQL (0.000342)[0m   [0mSELECT currval('dns_records_id_seq')[0m
+  [4;36;1mDnsDomain Load (0.000843)[0m   [0;1mSELECT * FROM dns_domains WHERE (dns_domains.id = 7) [0m
+  [4;35;1mDnsDomain Update (0.000389)[0m   [0mUPDATE dns_domains SET "last_check" = NULL, "account" = NULL, "notified_serial" = NULL, "name" = 'bob.com', "dtype" = 'NATIVE', "master" = NULL WHERE id = 7[0m
+  [4;36;1mDnsRecord Load (0.001404)[0m   [0;1mSELECT * FROM dns_records WHERE (dns_records.dns_domain_id = 7) [0m
+  [4;35;1mDnsRecord Destroy (0.000350)[0m   [0m DELETE FROM dns_records
+ WHERE id = 10
+[0m
+  [4;36;1mDnsRecord Destroy (0.000322)[0m   [0;1m DELETE FROM dns_records
+ WHERE id = 9
+[0m
+  [4;35;1mDnsRecord Destroy (0.000332)[0m   [0m DELETE FROM dns_records
+ WHERE id = 8
+[0m
+  [4;36;1mDnsRecord Destroy (0.000316)[0m   [0;1m DELETE FROM dns_records
+ WHERE id = 7
+[0m
+  [4;35;1mDnsRecord Destroy (0.000310)[0m   [0m DELETE FROM dns_records
+ WHERE id = 6
+[0m
+  [4;36;1mDnsDomain Destroy (0.000298)[0m   [0;1m DELETE FROM dns_domains
+ WHERE id = 7
+[0m
+  [4;35;1mDnsDomain Load (0.000807)[0m   [0mSELECT * FROM dns_domains WHERE (dns_domains."name" = 'bob.com') LIMIT 1[0m
+  [4;36;1mDnsDomain Load (0.000745)[0m   [0;1mSELECT * FROM dns_domains WHERE (dns_domains."name" = 'bob.com') LIMIT 1[0m
+  [4;35;1mDnsDomain Create (0.000316)[0m   [0mINSERT INTO dns_domains ("name", "dtype", "account", "last_check", "master", "notified_serial") VALUES('bob.com', 'NATIVE', NULL, NULL, NULL, NULL)[0m
+  [4;36;1mSQL (0.000350)[0m   [0;1mSELECT currval('dns_domains_id_seq')[0m
+  [4;35;1mDnsRecord Create (0.000352)[0m   [0mINSERT INTO dns_records ("dns_domain_id", "name", "prio", "ttl", "rtype", "change_date", "content") VALUES(8, 'bob.com', NULL, 86400, 'SOA', NULL, 'ns1.agentspaces.com support@activerain.com 1')[0m
+  [4;36;1mSQL (0.000360)[0m   [0;1mSELECT currval('dns_records_id_seq')[0m
+  [4;35;1mDnsRecord Create (0.000330)[0m   [0mINSERT INTO dns_records ("dns_domain_id", "name", "prio", "ttl", "rtype", "change_date", "content") VALUES(8, 'bob.com', NULL, 86400, 'NS', NULL, 'ns1.agentspaces.com')[0m
+  [4;36;1mSQL (0.000489)[0m   [0;1mSELECT currval('dns_records_id_seq')[0m
+  [4;35;1mDnsRecord Create (0.000339)[0m   [0mINSERT INTO dns_records ("dns_domain_id", "name", "prio", "ttl", "rtype", "change_date", "content") VALUES(8, 'bob.com', NULL, 86400, 'NS', NULL, 'ns2.agentspaces.com')[0m
+  [4;36;1mSQL (0.000360)[0m   [0;1mSELECT currval('dns_records_id_seq')[0m
+  [4;35;1mDnsRecord Create (0.000330)[0m   [0mINSERT INTO dns_records ("dns_domain_id", "name", "prio", "ttl", "rtype", "change_date", "content") VALUES(8, 'bob.com', NULL, 21600, 'A', NULL, '72.32.234.17')[0m
+  [4;36;1mSQL (0.000356)[0m   [0;1mSELECT currval('dns_records_id_seq')[0m
+  [4;35;1mDnsRecord Create (0.000407)[0m   [0mINSERT INTO dns_records ("dns_domain_id", "name", "prio", "ttl", "rtype", "change_date", "content") VALUES(8, 'www.bob.com', NULL, 86400, 'CNAME', NULL, 'bob.com')[0m
+  [4;36;1mSQL (0.000358)[0m   [0;1mSELECT currval('dns_records_id_seq')[0m
+  [4;35;1mDnsDomain Load (0.000851)[0m   [0mSELECT * FROM dns_domains WHERE (dns_domains.id = 8) [0m
+  [4;36;1mDnsDomain Update (0.000390)[0m   [0;1mUPDATE dns_domains SET "last_check" = NULL, "account" = NULL, "notified_serial" = NULL, "name" = 'bob.com', "dtype" = 'NATIVE', "master" = NULL WHERE id = 8[0m
+  [4;35;1mDnsRecord Load (0.001406)[0m   [0mSELECT * FROM dns_records WHERE (dns_records.dns_domain_id = 8) [0m
+  [4;36;1mDnsRecord Destroy (0.000332)[0m   [0;1m DELETE FROM dns_records
+ WHERE id = 15
+[0m
+  [4;35;1mDnsRecord Destroy (0.000315)[0m   [0m DELETE FROM dns_records
+ WHERE id = 14
+[0m
+  [4;36;1mDnsRecord Destroy (0.000311)[0m   [0;1m DELETE FROM dns_records
+ WHERE id = 13
+[0m
+  [4;35;1mDnsRecord Destroy (0.000310)[0m   [0m DELETE FROM dns_records
+ WHERE id = 12
+[0m
+  [4;36;1mDnsRecord Destroy (0.000312)[0m   [0;1m DELETE FROM dns_records
+ WHERE id = 11
+[0m
+  [4;35;1mDnsDomain Destroy (0.000282)[0m   [0m DELETE FROM dns_domains
+ WHERE id = 8
+[0m
+  [4;36;1mDnsDomain Load (0.000793)[0m   [0;1mSELECT * FROM dns_domains WHERE (dns_domains."name" = 'bob.com') LIMIT 1[0m
+  [4;35;1mDnsDomain Load (0.000763)[0m   [0mSELECT * FROM dns_domains WHERE (dns_domains."name" = 'bob.com') LIMIT 1[0m
+  [4;36;1mDnsDomain Create (0.000337)[0m   [0;1mINSERT INTO dns_domains ("name", "dtype", "account", "last_check", "master", "notified_serial") VALUES('bob.com', 'NATIVE', NULL, NULL, NULL, NULL)[0m
+  [4;35;1mSQL (0.000358)[0m   [0mSELECT currval('dns_domains_id_seq')[0m
+  [4;36;1mDnsRecord Create (0.000340)[0m   [0;1mINSERT INTO dns_records ("dns_domain_id", "name", "prio", "ttl", "rtype", "change_date", "content") VALUES(9, 'bob.com', NULL, 86400, 'SOA', NULL, 'ns1.agentspaces.com support@activerain.com 1')[0m
+  [4;35;1mSQL (0.000354)[0m   [0mSELECT currval('dns_records_id_seq')[0m
+  [4;36;1mDnsRecord Create (0.000358)[0m   [0;1mINSERT INTO dns_records ("dns_domain_id", "name", "prio", "ttl", "rtype", "change_date", "content") VALUES(9, 'bob.com', NULL, 86400, 'NS', NULL, 'ns1.agentspaces.com')[0m
+  [4;35;1mSQL (0.000356)[0m   [0mSELECT currval('dns_records_id_seq')[0m
+  [4;36;1mDnsRecord Create (0.000327)[0m   [0;1mINSERT INTO dns_records ("dns_domain_id", "name", "prio", "ttl", "rtype", "change_date", "content") VALUES(9, 'bob.com', NULL, 86400, 'NS', NULL, 'ns2.agentspaces.com')[0m
+  [4;35;1mSQL (0.000348)[0m   [0mSELECT currval('dns_records_id_seq')[0m
+  [4;36;1mDnsRecord Create (0.000323)[0m   [0;1mINSERT INTO dns_records ("dns_domain_id", "name", "prio", "ttl", "rtype", "change_date", "content") VALUES(9, 'bob.com', NULL, 21600, 'A', NULL, '72.32.234.17')[0m
+  [4;35;1mSQL (0.000351)[0m   [0mSELECT currval('dns_records_id_seq')[0m
+  [4;36;1mDnsRecord Create (0.000334)[0m   [0;1mINSERT INTO dns_records ("dns_domain_id", "name", "prio", "ttl", "rtype", "change_date", "content") VALUES(9, 'www.bob.com', NULL, 86400, 'CNAME', NULL, 'bob.com')[0m
+  [4;35;1mSQL (0.000349)[0m   [0mSELECT currval('dns_records_id_seq')[0m
+  [4;36;1mDnsDomain Load (0.000819)[0m   [0;1mSELECT * FROM dns_domains WHERE (dns_domains.id = 9) [0m
+  [4;35;1mDnsDomain Update (0.000379)[0m   [0mUPDATE dns_domains SET "last_check" = NULL, "account" = NULL, "notified_serial" = NULL, "name" = 'bob.com', "dtype" = 'NATIVE', "master" = NULL WHERE id = 9[0m
+  [4;36;1mDnsRecord Load (0.001481)[0m   [0;1mSELECT * FROM dns_records WHERE (dns_records.dns_domain_id = 9) [0m
+  [4;35;1mDnsRecord Destroy (0.000368)[0m   [0m DELETE FROM dns_records
+ WHERE id = 20
+[0m
+  [4;36;1mDnsRecord Destroy (0.000296)[0m   [0;1m DELETE FROM dns_records
+ WHERE id = 19
+[0m
+  [4;35;1mDnsRecord Destroy (0.000295)[0m   [0m DELETE FROM dns_records
+ WHERE id = 18
+[0m
+  [4;36;1mDnsRecord Destroy (0.000294)[0m   [0;1m DELETE FROM dns_records
+ WHERE id = 17
+[0m
+  [4;35;1mDnsRecord Destroy (0.000292)[0m   [0m DELETE FROM dns_records
+ WHERE id = 16
+[0m
+  [4;36;1mDnsDomain Destroy (0.000266)[0m   [0;1m DELETE FROM dns_domains
+ WHERE id = 9
+[0m
+  [4;35;1mDnsDomain Load (0.000857)[0m   [0mSELECT * FROM dns_domains WHERE (dns_domains."name" = 'bob.com') LIMIT 1[0m
+  [4;36;1mDnsDomain Load (0.000795)[0m   [0;1mSELECT * FROM dns_domains WHERE (dns_domains."name" = 'bob.com') LIMIT 1[0m
+  [4;35;1mDnsDomain Create (0.000324)[0m   [0mINSERT INTO dns_domains ("name", "dtype", "account", "last_check", "master", "notified_serial") VALUES('bob.com', 'NATIVE', NULL, NULL, NULL, NULL)[0m
+  [4;36;1mSQL (0.000355)[0m   [0;1mSELECT currval('dns_domains_id_seq')[0m
+  [4;35;1mDnsRecord Create (0.000356)[0m   [0mINSERT INTO dns_records ("dns_domain_id", "name", "prio", "ttl", "rtype", "change_date", "content") VALUES(10, 'bob.com', NULL, 86400, 'SOA', NULL, 'ns1.agentspaces.com support@activerain.com 1')[0m
+  [4;36;1mSQL (0.000350)[0m   [0;1mSELECT currval('dns_records_id_seq')[0m
+  [4;35;1mDnsRecord Create (0.000338)[0m   [0mINSERT INTO dns_records ("dns_domain_id", "name", "prio", "ttl", "rtype", "change_date", "content") VALUES(10, 'bob.com', NULL, 86400, 'NS', NULL, 'ns1.agentspaces.com')[0m
+  [4;36;1mSQL (0.000351)[0m   [0;1mSELECT currval('dns_records_id_seq')[0m
+  [4;35;1mDnsRecord Create (0.000325)[0m   [0mINSERT INTO dns_records ("dns_domain_id", "name", "prio", "ttl", "rtype", "change_date", "content") VALUES(10, 'bob.com', NULL, 86400, 'NS', NULL, 'ns2.agentspaces.com')[0m
+  [4;36;1mSQL (0.000351)[0m   [0;1mSELECT currval('dns_records_id_seq')[0m
+  [4;35;1mDnsRecord Create (0.000325)[0m   [0mINSERT INTO dns_records ("dns_domain_id", "name", "prio", "ttl", "rtype", "change_date", "content") VALUES(10, 'bob.com', NULL, 21600, 'A', NULL, '72.32.234.17')[0m
+  [4;36;1mSQL (0.000352)[0m   [0;1mSELECT currval('dns_records_id_seq')[0m
+  [4;35;1mDnsRecord Create (0.000328)[0m   [0mINSERT INTO dns_records ("dns_domain_id", "name", "prio", "ttl", "rtype", "change_date", "content") VALUES(10, 'www.bob.com', NULL, 86400, 'CNAME', NULL, 'bob.com')[0m
+  [4;36;1mSQL (0.000357)[0m   [0;1mSELECT currval('dns_records_id_seq')[0m
+  [4;35;1mDnsDomain Load (0.000824)[0m   [0mSELECT * FROM dns_domains WHERE (dns_domains.id = 10) [0m
+  [4;36;1mDnsDomain Update (0.000381)[0m   [0;1mUPDATE dns_domains SET "last_check" = NULL, "account" = NULL, "notified_serial" = NULL, "name" = 'bob.com', "dtype" = 'NATIVE', "master" = NULL WHERE id = 10[0m
+  [4;35;1mDnsRecord Load (0.001381)[0m   [0mSELECT * FROM dns_records WHERE (dns_records.dns_domain_id = 10) [0m
+  [4;36;1mDnsRecord Destroy (0.000332)[0m   [0;1m DELETE FROM dns_records
+ WHERE id = 25
+[0m
+  [4;35;1mDnsRecord Destroy (0.000313)[0m   [0m DELETE FROM dns_records
+ WHERE id = 24
+[0m
+  [4;36;1mDnsRecord Destroy (0.000311)[0m   [0;1m DELETE FROM dns_records
+ WHERE id = 23
+[0m
+  [4;35;1mDnsRecord Destroy (0.000310)[0m   [0m DELETE FROM dns_records
+ WHERE id = 22
+[0m
+  [4;36;1mDnsRecord Destroy (0.000316)[0m   [0;1m DELETE FROM dns_records
+ WHERE id = 21
+[0m
+  [4;35;1mDnsDomain Destroy (0.000274)[0m   [0m DELETE FROM dns_domains
+ WHERE id = 10
+[0m
+  [4;36;1mDnsDomain Load (0.000791)[0m   [0;1mSELECT * FROM dns_domains WHERE (dns_domains."name" = 'bob.com') LIMIT 1[0m
+  [4;35;1mSQL (0.000203)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000206)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000185)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000206)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000247)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000167)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000250)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000300)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000201)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000180)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000196)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000176)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000182)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000182)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000184)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000181)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000210)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000178)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000192)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000173)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000191)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000172)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000186)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000192)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000184)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000173)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000185)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000195)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000199)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000173)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000175)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000180)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000214)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000213)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000184)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000179)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000184)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000172)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000197)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000183)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000193)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000167)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000193)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000175)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000191)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000181)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000381)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000178)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000201)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000197)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000191)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000179)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000193)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000177)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000223)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000199)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000201)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000167)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000195)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000179)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000200)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000177)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000187)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000180)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000186)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000269)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000216)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000177)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000186)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000180)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000184)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000177)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000185)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000176)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000233)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000185)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000186)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000177)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000188)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000178)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000188)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000179)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000229)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000183)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000193)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000196)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000205)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000181)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000194)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000187)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000186)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000187)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000195)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000176)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000212)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000188)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000205)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000210)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000197)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000214)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000236)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000234)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000239)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000222)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000262)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000198)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000197)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000179)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000202)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000215)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000233)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000211)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000219)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000184)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000204)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000177)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000193)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000187)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000185)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000177)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000223)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000249)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000196)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000179)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000194)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000182)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000183)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000201)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000221)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000183)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000199)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000198)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000207)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000193)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000213)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000177)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000220)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000242)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000199)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000191)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000203)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000184)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000200)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000187)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000202)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000192)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000258)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000231)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000194)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000179)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000184)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000206)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000184)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000185)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000193)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000176)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000182)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000185)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000227)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000193)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000195)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000177)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000207)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000187)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000268)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000187)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000235)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000215)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000206)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000186)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000176)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000180)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000212)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000188)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000219)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000194)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000185)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000187)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000197)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000184)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000192)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000188)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000212)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000182)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000188)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000289)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000202)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000188)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000195)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000186)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000199)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000186)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000198)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000187)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000204)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000199)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000340)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000223)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000277)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000213)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000198)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000204)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000185)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000180)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000199)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000174)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000189)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000173)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000223)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000173)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000187)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000171)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000249)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000188)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000185)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000179)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000189)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000179)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000189)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000179)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000188)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000180)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000187)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000179)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000187)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000219)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000317)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000182)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000187)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000197)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000199)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000180)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000189)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000185)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000183)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000178)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000209)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000183)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000187)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000183)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000185)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000197)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000180)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000179)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000186)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000176)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000199)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000176)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000186)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000182)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000194)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000175)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000180)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000181)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000188)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000181)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000187)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000179)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000186)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000178)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000184)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000178)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000184)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000205)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000221)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000207)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000216)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000213)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000207)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000181)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000186)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000179)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000198)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000197)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000204)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000184)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000197)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000179)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000188)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000178)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000190)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000180)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000278)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000182)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000186)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000189)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000189)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000173)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000200)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000181)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000184)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000183)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000180)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000180)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000184)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000182)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000184)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000171)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000306)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000195)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000215)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000174)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000182)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000182)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000182)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000203)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000215)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000183)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000184)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000187)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000182)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000181)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000208)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000208)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000223)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000180)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000185)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000185)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000175)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000176)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000183)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000178)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000186)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000176)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000184)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000175)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000173)[0m   [0mROLLBACK[0m
+  [4;36;1mSQL (0.000545)[0m   [0;1mSET client_min_messages TO 'ERROR'[0m
+  [4;35;1mSQL (0.062940)[0m   [0mDROP TABLE blog_entries[0m
+  [4;36;1mSQL (0.004874)[0m   [0;1mDROP TABLE blog_comments[0m
+  [4;35;1mSQL (0.004394)[0m   [0mDROP TABLE profiles[0m
+  [4;36;1mSQL (0.015617)[0m   [0;1mCREATE TABLE blog_entries ("id" serial primary key, "title" character varying(255) DEFAULT NULL, "description" text DEFAULT NULL) [0m
+  [4;35;1mSQL (0.008796)[0m   [0mCREATE TABLE blog_comments ("id" serial primary key, "blog_entry_id" integer DEFAULT NULL, "name" character varying(255) DEFAULT NULL, "email" character varying(255) DEFAULT NULL, "url" character varying(255) DEFAULT NULL, "comment" text DEFAULT NULL) [0m
+  [4;36;1mSQL (0.007023)[0m   [0;1mCREATE TABLE profiles ("id" serial primary key, "name" character varying(255) DEFAULT NULL, "public_info" character varying(255) DEFAULT NULL, "private_info" character varying(255) DEFAULT NULL) [0m
+  [4;35;1mSQL (0.000000)[0m   [0mRuntimeError: ERROR	C42P07	Mrelation "schema_info" already exists	Fheap.c	L695	Rheap_create_with_catalog: CREATE TABLE schema_info (version integer)[0m
+  [4;36;1mSQL (0.006921)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'schema_info'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mSQL (0.001293)[0m   [0mUPDATE schema_info SET version = 1[0m
+  [4;36;1mSQL (0.001820)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'blog_entries'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mSQL (0.002317)[0m   [0malter table blog_entries add column vectors tsvector[0m
+  [4;36;1mSQL (0.005064)[0m   [0;1mCREATE INDEX blog_entries_fts_vectors_index ON blog_entries USING gist(vectors)[0m
+  [4;35;1mSQL (0.000000)[0m   [0mRuntimeError: ERROR	C42703	Mcolumn "oid" does not exist	WSQL statement "select oid from public.pg_ts_cfg where ts_name = $1"	Fparse_expr.c	L396	RtransformColumnRef: update blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'') || ' ' || coalesce(description,'')),'A')
+ [0m
+  [4;36;1mSQL (0.001905)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'blog_entries'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mSQL (0.000000)[0m   [0mRuntimeError: ERROR	C42703	Mcolumn "oid" does not exist	WSQL statement "select oid from public.pg_ts_cfg where ts_name = $1"	Fparse_expr.c	L396	RtransformColumnRef: update blog_entries set vectors = to_tsvector('default',coalesce(title,'') || ' ' || coalesce(description,''))[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mRuntimeError: ERROR	C42703	Mcolumn "oid" does not exist	WSQL statement "select oid from public.pg_ts_cfg where ts_name = $1"	Fparse_expr.c	L396	RtransformColumnRef: update blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'')),'A')
+ [0m
+  [4;35;1mSQL (0.001105)[0m   [0mSELECT count(*) AS count_all FROM blog_entries [0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mRuntimeError: ERROR	C42703	Mcolumn "oid" does not exist	WSQL statement "select oid from public.pg_ts_cfg where ts_name = $1"	Fparse_expr.c	L396	RtransformColumnRef: update blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(blog_entries.title,'')),'A')
+ || setweight( to_tsvector('default', 
+ coalesce(blog_comments.comment,'')),'B')
+ from blog_entries b2 left outer join blog_comments on blog_comments.blog_entry_id = b2.id where b2.id = blog_entries.id[0m
+  [4;35;1mSQL (0.000000)[0m   [0mRuntimeError: ERROR	C42703	Mcolumn "oid" does not exist	WSQL statement "select oid from public.pg_ts_cfg where ts_name = $1"	Fparse_expr.c	L396	RtransformColumnRef: update blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'')),'A')
+ [0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mRuntimeError: ERROR	C42703	Mcolumn "oid" does not exist	WSQL statement "select oid from public.pg_ts_cfg where ts_name = $1"	Fparse_expr.c	L396	RtransformColumnRef: update blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'') || ' ' || coalesce(description,'')),'A')
+ [0m
+  [4;35;1mSQL (0.001824)[0m   [0m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'profiles'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;36;1mSQL (0.007190)[0m   [0;1malter table profiles add column public_vector tsvector[0m
+  [4;35;1mSQL (0.002377)[0m   [0mCREATE INDEX profiles_fts_public_vector_index ON profiles USING gist(public_vector)[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mRuntimeError: ERROR	C42703	Mcolumn "oid" does not exist	WSQL statement "select oid from public.pg_ts_cfg where ts_name = $1"	Fparse_expr.c	L396	RtransformColumnRef: update profiles set public_vector = to_tsvector('default',coalesce(name,'') || ' ' || coalesce(public_info,''))[0m
+  [4;35;1mSQL (0.000000)[0m   [0mRuntimeError: ERROR	C42703	Mcolumn "oid" does not exist	WSQL statement "select oid from public.pg_ts_cfg where ts_name = $1"	Fparse_expr.c	L396	RtransformColumnRef: update blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'')),'A')
+ || setweight( to_tsvector('default', 
+ coalesce(description,'')),'B')
+ [0m
+  [4;36;1mSQL (0.000613)[0m   [0;1mSET client_min_messages TO 'ERROR'[0m
+  [4;35;1mSQL (2.327178)[0m   [0mDROP TABLE blog_entries[0m
+  [4;36;1mSQL (0.185231)[0m   [0;1mDROP TABLE blog_comments[0m
+  [4;35;1mSQL (0.523477)[0m   [0mDROP TABLE profiles[0m
+  [4;36;1mSQL (1.079987)[0m   [0;1mCREATE TABLE blog_entries ("id" serial primary key, "title" character varying(255) DEFAULT NULL, "description" text DEFAULT NULL) [0m
+  [4;35;1mSQL (0.143782)[0m   [0mCREATE TABLE blog_comments ("id" serial primary key, "blog_entry_id" integer DEFAULT NULL, "name" character varying(255) DEFAULT NULL, "email" character varying(255) DEFAULT NULL, "url" character varying(255) DEFAULT NULL, "comment" text DEFAULT NULL) [0m
+  [4;36;1mSQL (0.097668)[0m   [0;1mCREATE TABLE profiles ("id" serial primary key, "name" character varying(255) DEFAULT NULL, "public_info" character varying(255) DEFAULT NULL, "private_info" character varying(255) DEFAULT NULL) [0m
+  [4;35;1mSQL (0.000000)[0m   [0mRuntimeError: ERROR	C42P07	Mrelation "schema_info" already exists	Fheap.c	L695	Rheap_create_with_catalog: CREATE TABLE schema_info (version integer)[0m
+  [4;36;1mSQL (0.258289)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'schema_info'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mSQL (0.053576)[0m   [0mUPDATE schema_info SET version = 1[0m
+  [4;36;1mSQL (0.001861)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'blog_entries'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mSQL (0.306449)[0m   [0malter table blog_entries add column vectors tsvector[0m
+  [4;36;1mSQL (0.104868)[0m   [0;1mCREATE INDEX blog_entries_fts_vectors_index ON blog_entries USING gist(vectors)[0m
+  [4;35;1mSQL (0.000000)[0m   [0mRuntimeError: ERROR	C42703	Mcolumn "oid" does not exist	WSQL statement "select oid from public.pg_ts_cfg where ts_name = $1"	Fparse_expr.c	L396	RtransformColumnRef: update blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'') || ' ' || coalesce(description,'')),'A')
+ [0m
+  [4;36;1mSQL (0.002013)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'blog_entries'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mSQL (0.000000)[0m   [0mRuntimeError: ERROR	C42703	Mcolumn "oid" does not exist	WSQL statement "select oid from public.pg_ts_cfg where ts_name = $1"	Fparse_expr.c	L396	RtransformColumnRef: update blog_entries set vectors = to_tsvector('default',coalesce(title,'') || ' ' || coalesce(description,''))[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mRuntimeError: ERROR	C42703	Mcolumn "oid" does not exist	WSQL statement "select oid from public.pg_ts_cfg where ts_name = $1"	Fparse_expr.c	L396	RtransformColumnRef: update blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'')),'A')
+ [0m
+  [4;35;1mSQL (0.059999)[0m   [0mSELECT count(*) AS count_all FROM blog_entries [0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mRuntimeError: ERROR	C42703	Mcolumn "oid" does not exist	WSQL statement "select oid from public.pg_ts_cfg where ts_name = $1"	Fparse_expr.c	L396	RtransformColumnRef: update blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(blog_entries.title,'')),'A')
+ || setweight( to_tsvector('default', 
+ coalesce(blog_comments.comment,'')),'B')
+ from blog_entries b2 left outer join blog_comments on blog_comments.blog_entry_id = b2.id where b2.id = blog_entries.id[0m
+  [4;35;1mSQL (0.000000)[0m   [0mRuntimeError: ERROR	C42703	Mcolumn "oid" does not exist	WSQL statement "select oid from public.pg_ts_cfg where ts_name = $1"	Fparse_expr.c	L396	RtransformColumnRef: update blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'')),'A')
+ [0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mRuntimeError: ERROR	C42703	Mcolumn "oid" does not exist	WSQL statement "select oid from public.pg_ts_cfg where ts_name = $1"	Fparse_expr.c	L396	RtransformColumnRef: update blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'') || ' ' || coalesce(description,'')),'A')
+ [0m
+  [4;35;1mSQL (0.001910)[0m   [0m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'profiles'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;36;1mSQL (0.004592)[0m   [0;1malter table profiles add column public_vector tsvector[0m
+  [4;35;1mSQL (0.002412)[0m   [0mCREATE INDEX profiles_fts_public_vector_index ON profiles USING gist(public_vector)[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mRuntimeError: ERROR	C42703	Mcolumn "oid" does not exist	WSQL statement "select oid from public.pg_ts_cfg where ts_name = $1"	Fparse_expr.c	L396	RtransformColumnRef: update profiles set public_vector = to_tsvector('default',coalesce(name,'') || ' ' || coalesce(public_info,''))[0m
+  [4;35;1mSQL (0.000000)[0m   [0mRuntimeError: ERROR	C42703	Mcolumn "oid" does not exist	WSQL statement "select oid from public.pg_ts_cfg where ts_name = $1"	Fparse_expr.c	L396	RtransformColumnRef: update blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'')),'A')
+ || setweight( to_tsvector('default', 
+ coalesce(description,'')),'B')
+ [0m
+  [4;36;1mSQL (0.000548)[0m   [0;1mSET client_min_messages TO 'ERROR'[0m
+  [4;35;1mSQL (0.010433)[0m   [0mDROP TABLE blog_entries[0m
+  [4;36;1mSQL (0.003672)[0m   [0;1mDROP TABLE blog_comments[0m
+  [4;35;1mSQL (0.004729)[0m   [0mDROP TABLE profiles[0m
+  [4;36;1mSQL (0.015361)[0m   [0;1mCREATE TABLE blog_entries ("id" serial primary key, "title" character varying(255) DEFAULT NULL, "description" text DEFAULT NULL) [0m
+  [4;35;1mSQL (0.012503)[0m   [0mCREATE TABLE blog_comments ("id" serial primary key, "blog_entry_id" integer DEFAULT NULL, "name" character varying(255) DEFAULT NULL, "email" character varying(255) DEFAULT NULL, "url" character varying(255) DEFAULT NULL, "comment" text DEFAULT NULL) [0m
+  [4;36;1mSQL (0.006465)[0m   [0;1mCREATE TABLE profiles ("id" serial primary key, "name" character varying(255) DEFAULT NULL, "public_info" character varying(255) DEFAULT NULL, "private_info" character varying(255) DEFAULT NULL) [0m
+  [4;35;1mSQL (0.000000)[0m   [0mRuntimeError: ERROR	C42P07	Mrelation "schema_info" already exists	Fheap.c	L695	Rheap_create_with_catalog: CREATE TABLE schema_info (version integer)[0m
+  [4;36;1mSQL (0.004813)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'schema_info'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mSQL (0.001372)[0m   [0mUPDATE schema_info SET version = 1[0m
+  [4;36;1mSQL (0.001830)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'blog_entries'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mSQL (0.002412)[0m   [0malter table blog_entries add column vectors tsvector[0m
+  [4;36;1mSQL (0.005434)[0m   [0;1mCREATE INDEX blog_entries_fts_vectors_index ON blog_entries USING gist(vectors)[0m
+  [4;35;1mSQL (0.000000)[0m   [0mRuntimeError: ERROR	C42703	Mcolumn "oid" does not exist	WSQL statement "select oid from public.pg_ts_cfg where ts_name = $1"	Fparse_expr.c	L396	RtransformColumnRef: update blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'') || ' ' || coalesce(description,'')),'A')
+ [0m
+  [4;36;1mSQL (0.002043)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'blog_entries'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mSQL (0.000000)[0m   [0mRuntimeError: ERROR	C42703	Mcolumn "oid" does not exist	WSQL statement "select oid from public.pg_ts_cfg where ts_name = $1"	Fparse_expr.c	L396	RtransformColumnRef: update blog_entries set vectors = to_tsvector('default',coalesce(title,'') || ' ' || coalesce(description,''))[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mRuntimeError: ERROR	C42703	Mcolumn "oid" does not exist	WSQL statement "select oid from public.pg_ts_cfg where ts_name = $1"	Fparse_expr.c	L396	RtransformColumnRef: update blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'')),'A')
+ [0m
+  [4;35;1mSQL (0.001098)[0m   [0mSELECT count(*) AS count_all FROM blog_entries [0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mRuntimeError: ERROR	C42703	Mcolumn "oid" does not exist	WSQL statement "select oid from public.pg_ts_cfg where ts_name = $1"	Fparse_expr.c	L396	RtransformColumnRef: update blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(blog_entries.title,'')),'A')
+ || setweight( to_tsvector('default', 
+ coalesce(blog_comments.comment,'')),'B')
+ from blog_entries b2 left outer join blog_comments on blog_comments.blog_entry_id = b2.id where b2.id = blog_entries.id[0m
+  [4;35;1mSQL (0.000000)[0m   [0mRuntimeError: ERROR	C42703	Mcolumn "oid" does not exist	WSQL statement "select oid from public.pg_ts_cfg where ts_name = $1"	Fparse_expr.c	L396	RtransformColumnRef: update blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'')),'A')
+ [0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mRuntimeError: ERROR	C42703	Mcolumn "oid" does not exist	WSQL statement "select oid from public.pg_ts_cfg where ts_name = $1"	Fparse_expr.c	L396	RtransformColumnRef: update blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'') || ' ' || coalesce(description,'')),'A')
+ [0m
+  [4;35;1mSQL (0.002026)[0m   [0m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'profiles'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;36;1mSQL (0.005075)[0m   [0;1malter table profiles add column public_vector tsvector[0m
+  [4;35;1mSQL (0.002535)[0m   [0mCREATE INDEX profiles_fts_public_vector_index ON profiles USING gist(public_vector)[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mRuntimeError: ERROR	C42703	Mcolumn "oid" does not exist	WSQL statement "select oid from public.pg_ts_cfg where ts_name = $1"	Fparse_expr.c	L396	RtransformColumnRef: update profiles set public_vector = to_tsvector('default',coalesce(name,'') || ' ' || coalesce(public_info,''))[0m
+  [4;35;1mSQL (0.000000)[0m   [0mRuntimeError: ERROR	C42703	Mcolumn "oid" does not exist	WSQL statement "select oid from public.pg_ts_cfg where ts_name = $1"	Fparse_expr.c	L396	RtransformColumnRef: update blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'')),'A')
+ || setweight( to_tsvector('default', 
+ coalesce(description,'')),'B')
+ [0m
+  [4;36;1mSQL (0.000587)[0m   [0;1mSET client_min_messages TO 'ERROR'[0m
+  [4;35;1mSQL (0.009127)[0m   [0mDROP TABLE blog_entries[0m
+  [4;36;1mSQL (0.003569)[0m   [0;1mDROP TABLE blog_comments[0m
+  [4;35;1mSQL (0.005169)[0m   [0mDROP TABLE profiles[0m
+  [4;36;1mSQL (0.012653)[0m   [0;1mCREATE TABLE blog_entries ("id" serial primary key, "title" character varying(255) DEFAULT NULL, "description" text DEFAULT NULL) [0m
+  [4;35;1mSQL (0.009389)[0m   [0mCREATE TABLE blog_comments ("id" serial primary key, "blog_entry_id" integer DEFAULT NULL, "name" character varying(255) DEFAULT NULL, "email" character varying(255) DEFAULT NULL, "url" character varying(255) DEFAULT NULL, "comment" text DEFAULT NULL) [0m
+  [4;36;1mSQL (0.053196)[0m   [0;1mCREATE TABLE profiles ("id" serial primary key, "name" character varying(255) DEFAULT NULL, "public_info" character varying(255) DEFAULT NULL, "private_info" character varying(255) DEFAULT NULL) [0m
+  [4;35;1mSQL (0.000000)[0m   [0mRuntimeError: ERROR	C42P07	Mrelation "schema_info" already exists	Fheap.c	L695	Rheap_create_with_catalog: CREATE TABLE schema_info (version integer)[0m
+  [4;36;1mSQL (0.005798)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'schema_info'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mSQL (0.001317)[0m   [0mUPDATE schema_info SET version = 1[0m
+  [4;36;1mSQL (0.001802)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'blog_entries'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mSQL (0.002207)[0m   [0malter table blog_entries add column vectors tsvector[0m
+  [4;36;1mSQL (0.004642)[0m   [0;1mCREATE INDEX blog_entries_fts_vectors_index ON blog_entries USING gist(vectors)[0m
+  [4;35;1mSQL (0.000000)[0m   [0mRuntimeError: ERROR	C42703	Mcolumn "oid" does not exist	WSQL statement "select oid from public.pg_ts_cfg where ts_name = $1"	Fparse_expr.c	L396	RtransformColumnRef: update blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'') || ' ' || coalesce(description,'')),'A')
+ [0m
+  [4;36;1mSQL (0.002013)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'blog_entries'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mSQL (0.000000)[0m   [0mRuntimeError: ERROR	C42703	Mcolumn "oid" does not exist	WSQL statement "select oid from public.pg_ts_cfg where ts_name = $1"	Fparse_expr.c	L396	RtransformColumnRef: update blog_entries set vectors = to_tsvector('default',coalesce(title,'') || ' ' || coalesce(description,''))[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mRuntimeError: ERROR	C42703	Mcolumn "oid" does not exist	WSQL statement "select oid from public.pg_ts_cfg where ts_name = $1"	Fparse_expr.c	L396	RtransformColumnRef: update blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'')),'A')
+ [0m
+  [4;35;1mSQL (0.001203)[0m   [0mSELECT count(*) AS count_all FROM blog_entries [0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mRuntimeError: ERROR	C42703	Mcolumn "oid" does not exist	WSQL statement "select oid from public.pg_ts_cfg where ts_name = $1"	Fparse_expr.c	L396	RtransformColumnRef: update blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(blog_entries.title,'')),'A')
+ || setweight( to_tsvector('default', 
+ coalesce(blog_comments.comment,'')),'B')
+ from blog_entries b2 left outer join blog_comments on blog_comments.blog_entry_id = b2.id where b2.id = blog_entries.id[0m
+  [4;35;1mSQL (0.000000)[0m   [0mRuntimeError: ERROR	C42703	Mcolumn "oid" does not exist	WSQL statement "select oid from public.pg_ts_cfg where ts_name = $1"	Fparse_expr.c	L396	RtransformColumnRef: update blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'')),'A')
+ [0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mRuntimeError: ERROR	C42703	Mcolumn "oid" does not exist	WSQL statement "select oid from public.pg_ts_cfg where ts_name = $1"	Fparse_expr.c	L396	RtransformColumnRef: update blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'') || ' ' || coalesce(description,'')),'A')
+ [0m
+  [4;35;1mSQL (0.001946)[0m   [0m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'profiles'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;36;1mSQL (0.005707)[0m   [0;1malter table profiles add column public_vector tsvector[0m
+  [4;35;1mSQL (0.002275)[0m   [0mCREATE INDEX profiles_fts_public_vector_index ON profiles USING gist(public_vector)[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mRuntimeError: ERROR	C42703	Mcolumn "oid" does not exist	WSQL statement "select oid from public.pg_ts_cfg where ts_name = $1"	Fparse_expr.c	L396	RtransformColumnRef: update profiles set public_vector = to_tsvector('default',coalesce(name,'') || ' ' || coalesce(public_info,''))[0m
+  [4;35;1mSQL (0.000000)[0m   [0mRuntimeError: ERROR	C42703	Mcolumn "oid" does not exist	WSQL statement "select oid from public.pg_ts_cfg where ts_name = $1"	Fparse_expr.c	L396	RtransformColumnRef: update blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'')),'A')
+ || setweight( to_tsvector('default', 
+ coalesce(description,'')),'B')
+ [0m
+  [4;36;1mSQL (0.000530)[0m   [0;1mSET client_min_messages TO 'ERROR'[0m
+  [4;35;1mSQL (0.300151)[0m   [0mDROP TABLE blog_entries[0m
+  [4;36;1mSQL (0.004214)[0m   [0;1mDROP TABLE blog_comments[0m
+  [4;35;1mSQL (0.003289)[0m   [0mDROP TABLE profiles[0m
+  [4;36;1mSQL (0.017574)[0m   [0;1mCREATE TABLE blog_entries ("id" serial primary key, "title" character varying(255) DEFAULT NULL, "description" text DEFAULT NULL) [0m
+  [4;35;1mSQL (0.083310)[0m   [0mCREATE TABLE blog_comments ("id" serial primary key, "blog_entry_id" integer DEFAULT NULL, "name" character varying(255) DEFAULT NULL, "email" character varying(255) DEFAULT NULL, "url" character varying(255) DEFAULT NULL, "comment" text DEFAULT NULL) [0m
+  [4;36;1mSQL (0.006703)[0m   [0;1mCREATE TABLE profiles ("id" serial primary key, "name" character varying(255) DEFAULT NULL, "public_info" character varying(255) DEFAULT NULL, "private_info" character varying(255) DEFAULT NULL) [0m
+  [4;35;1mSQL (0.000000)[0m   [0mRuntimeError: ERROR	C42P07	Mrelation "schema_info" already exists	Fheap.c	L695	Rheap_create_with_catalog: CREATE TABLE schema_info (version integer)[0m
+  [4;36;1mSQL (0.004985)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'schema_info'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mSQL (0.001404)[0m   [0mUPDATE schema_info SET version = 1[0m
+  [4;36;1mSQL (0.001841)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'blog_entries'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mSQL (0.002412)[0m   [0malter table blog_entries add column vectors tsvector[0m
+  [4;36;1mSQL (0.005505)[0m   [0;1mCREATE INDEX blog_entries_fts_vectors_index ON blog_entries USING gist(vectors)[0m
+  [4;35;1mSQL (0.000000)[0m   [0mRuntimeError: ERROR	C42703	Mcolumn "oid" does not exist	WSQL statement "select oid from public.pg_ts_cfg where ts_name = $1"	Fparse_expr.c	L396	RtransformColumnRef: update blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'') || ' ' || coalesce(description,'')),'A')
+ [0m
+  [4;36;1mSQL (0.002052)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'blog_entries'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mSQL (0.000000)[0m   [0mRuntimeError: ERROR	C42703	Mcolumn "oid" does not exist	WSQL statement "select oid from public.pg_ts_cfg where ts_name = $1"	Fparse_expr.c	L396	RtransformColumnRef: update blog_entries set vectors = to_tsvector('default',coalesce(title,'') || ' ' || coalesce(description,''))[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mRuntimeError: ERROR	C42703	Mcolumn "oid" does not exist	WSQL statement "select oid from public.pg_ts_cfg where ts_name = $1"	Fparse_expr.c	L396	RtransformColumnRef: update blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'')),'A')
+ [0m
+  [4;35;1mSQL (0.001085)[0m   [0mSELECT count(*) AS count_all FROM blog_entries [0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mRuntimeError: ERROR	C42703	Mcolumn "oid" does not exist	WSQL statement "select oid from public.pg_ts_cfg where ts_name = $1"	Fparse_expr.c	L396	RtransformColumnRef: update blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(blog_entries.title,'')),'A')
+ || setweight( to_tsvector('default', 
+ coalesce(blog_comments.comment,'')),'B')
+ from blog_entries b2 left outer join blog_comments on blog_comments.blog_entry_id = b2.id where b2.id = blog_entries.id[0m
+  [4;35;1mSQL (0.000000)[0m   [0mRuntimeError: ERROR	C42703	Mcolumn "oid" does not exist	WSQL statement "select oid from public.pg_ts_cfg where ts_name = $1"	Fparse_expr.c	L396	RtransformColumnRef: update blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'')),'A')
+ [0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mRuntimeError: ERROR	C42703	Mcolumn "oid" does not exist	WSQL statement "select oid from public.pg_ts_cfg where ts_name = $1"	Fparse_expr.c	L396	RtransformColumnRef: update blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'') || ' ' || coalesce(description,'')),'A')
+ [0m
+  [4;35;1mSQL (0.002157)[0m   [0m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'profiles'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;36;1mSQL (0.005012)[0m   [0;1malter table profiles add column public_vector tsvector[0m
+  [4;35;1mSQL (0.002430)[0m   [0mCREATE INDEX profiles_fts_public_vector_index ON profiles USING gist(public_vector)[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mRuntimeError: ERROR	C42703	Mcolumn "oid" does not exist	WSQL statement "select oid from public.pg_ts_cfg where ts_name = $1"	Fparse_expr.c	L396	RtransformColumnRef: update profiles set public_vector = to_tsvector('default',coalesce(name,'') || ' ' || coalesce(public_info,''))[0m
+  [4;35;1mSQL (0.000000)[0m   [0mRuntimeError: ERROR	C42703	Mcolumn "oid" does not exist	WSQL statement "select oid from public.pg_ts_cfg where ts_name = $1"	Fparse_expr.c	L396	RtransformColumnRef: update blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'')),'A')
+ || setweight( to_tsvector('default', 
+ coalesce(description,'')),'B')
+ [0m
+  [4;36;1mSQL (0.000594)[0m   [0;1mSET client_min_messages TO 'ERROR'[0m
+  [4;35;1mSQL (0.010425)[0m   [0mDROP TABLE blog_entries[0m
+  [4;36;1mSQL (0.004928)[0m   [0;1mDROP TABLE blog_comments[0m
+  [4;35;1mSQL (0.004558)[0m   [0mDROP TABLE profiles[0m
+  [4;36;1mSQL (0.015195)[0m   [0;1mCREATE TABLE blog_entries ("id" serial primary key, "title" character varying(255) DEFAULT NULL, "description" text DEFAULT NULL) [0m
+  [4;35;1mSQL (0.009609)[0m   [0mCREATE TABLE blog_comments ("id" serial primary key, "blog_entry_id" integer DEFAULT NULL, "name" character varying(255) DEFAULT NULL, "email" character varying(255) DEFAULT NULL, "url" character varying(255) DEFAULT NULL, "comment" text DEFAULT NULL) [0m
+  [4;36;1mSQL (0.006686)[0m   [0;1mCREATE TABLE profiles ("id" serial primary key, "name" character varying(255) DEFAULT NULL, "public_info" character varying(255) DEFAULT NULL, "private_info" character varying(255) DEFAULT NULL) [0m
+  [4;35;1mSQL (0.000000)[0m   [0mRuntimeError: ERROR	C42P07	Mrelation "schema_info" already exists	Fheap.c	L695	Rheap_create_with_catalog: CREATE TABLE schema_info (version integer)[0m
+  [4;36;1mSQL (0.004468)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'schema_info'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mSQL (0.001292)[0m   [0mUPDATE schema_info SET version = 1[0m
+  [4;36;1mSQL (0.001928)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'blog_entries'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mSQL (0.002398)[0m   [0malter table blog_entries add column vectors tsvector[0m
+  [4;36;1mSQL (0.005540)[0m   [0;1mCREATE INDEX blog_entries_fts_vectors_index ON blog_entries USING gist(vectors)[0m
+  [4;35;1mSQL (0.000000)[0m   [0mRuntimeError: ERROR	C42703	Mcolumn "oid" does not exist	WSQL statement "select oid from public.pg_ts_cfg where ts_name = $1"	Fparse_expr.c	L396	RtransformColumnRef: update blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'') || ' ' || coalesce(description,'')),'A')
+ [0m
+  [4;36;1mSQL (0.002187)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'blog_entries'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mSQL (0.000000)[0m   [0mRuntimeError: ERROR	C42703	Mcolumn "oid" does not exist	WSQL statement "select oid from public.pg_ts_cfg where ts_name = $1"	Fparse_expr.c	L396	RtransformColumnRef: update blog_entries set vectors = to_tsvector('default',coalesce(title,'') || ' ' || coalesce(description,''))[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mRuntimeError: ERROR	C42703	Mcolumn "oid" does not exist	WSQL statement "select oid from public.pg_ts_cfg where ts_name = $1"	Fparse_expr.c	L396	RtransformColumnRef: update blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'')),'A')
+ [0m
+  [4;35;1mSQL (0.001070)[0m   [0mSELECT count(*) AS count_all FROM blog_entries [0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mRuntimeError: ERROR	C42703	Mcolumn "oid" does not exist	WSQL statement "select oid from public.pg_ts_cfg where ts_name = $1"	Fparse_expr.c	L396	RtransformColumnRef: update blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(blog_entries.title,'')),'A')
+ || setweight( to_tsvector('default', 
+ coalesce(blog_comments.comment,'')),'B')
+ from blog_entries b2 left outer join blog_comments on blog_comments.blog_entry_id = b2.id where b2.id = blog_entries.id[0m
+  [4;35;1mSQL (0.000000)[0m   [0mRuntimeError: ERROR	C42703	Mcolumn "oid" does not exist	WSQL statement "select oid from public.pg_ts_cfg where ts_name = $1"	Fparse_expr.c	L396	RtransformColumnRef: update blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'')),'A')
+ [0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mRuntimeError: ERROR	C42703	Mcolumn "oid" does not exist	WSQL statement "select oid from public.pg_ts_cfg where ts_name = $1"	Fparse_expr.c	L396	RtransformColumnRef: update blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'') || ' ' || coalesce(description,'')),'A')
+ [0m
+  [4;35;1mSQL (0.002075)[0m   [0m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'profiles'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;36;1mSQL (0.005312)[0m   [0;1malter table profiles add column public_vector tsvector[0m
+  [4;35;1mSQL (0.002511)[0m   [0mCREATE INDEX profiles_fts_public_vector_index ON profiles USING gist(public_vector)[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mRuntimeError: ERROR	C42703	Mcolumn "oid" does not exist	WSQL statement "select oid from public.pg_ts_cfg where ts_name = $1"	Fparse_expr.c	L396	RtransformColumnRef: update profiles set public_vector = to_tsvector('default',coalesce(name,'') || ' ' || coalesce(public_info,''))[0m
+  [4;35;1mSQL (0.000000)[0m   [0mRuntimeError: ERROR	C42703	Mcolumn "oid" does not exist	WSQL statement "select oid from public.pg_ts_cfg where ts_name = $1"	Fparse_expr.c	L396	RtransformColumnRef: update blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'')),'A')
+ || setweight( to_tsvector('default', 
+ coalesce(description,'')),'B')
+ [0m
+  [4;36;1mSQL (0.000563)[0m   [0;1mSET client_min_messages TO 'ERROR'[0m
+  [4;35;1mSQL (0.000000)[0m   [0mRuntimeError: ERROR	C42P01	Mtable "blog_entries" does not exist	Futility.c	L144	RDropErrorMsgNonExistent: DROP TABLE blog_entries[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mRuntimeError: ERROR	C42P01	Mtable "blog_comments" does not exist	Futility.c	L144	RDropErrorMsgNonExistent: DROP TABLE blog_comments[0m
+  [4;35;1mSQL (0.000000)[0m   [0mRuntimeError: ERROR	C42P01	Mtable "profiles" does not exist	Futility.c	L144	RDropErrorMsgNonExistent: DROP TABLE profiles[0m
+  [4;36;1mSQL (0.012253)[0m   [0;1mCREATE TABLE blog_entries ("id" serial primary key, "title" character varying(255) DEFAULT NULL, "description" text DEFAULT NULL) [0m
+  [4;35;1mSQL (0.008512)[0m   [0mCREATE TABLE blog_comments ("id" serial primary key, "blog_entry_id" integer DEFAULT NULL, "name" character varying(255) DEFAULT NULL, "email" character varying(255) DEFAULT NULL, "url" character varying(255) DEFAULT NULL, "comment" text DEFAULT NULL) [0m
+  [4;36;1mSQL (0.005457)[0m   [0;1mCREATE TABLE profiles ("id" serial primary key, "name" character varying(255) DEFAULT NULL, "public_info" character varying(255) DEFAULT NULL, "private_info" character varying(255) DEFAULT NULL) [0m
+  [4;35;1mSQL (0.002280)[0m   [0mCREATE TABLE schema_info (version integer)[0m
+  [4;36;1mSQL (0.001820)[0m   [0;1mINSERT INTO schema_info (version) VALUES(0)[0m
+  [4;35;1mSQL (0.005163)[0m   [0m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'schema_info'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;36;1mSQL (0.001321)[0m   [0;1mUPDATE schema_info SET version = 1[0m
+  [4;35;1mSQL (0.001956)[0m   [0m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'blog_entries'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;36;1mSQL (0.001924)[0m   [0;1malter table blog_entries add column vectors tsvector[0m
+  [4;35;1mSQL (0.004460)[0m   [0mCREATE INDEX blog_entries_fts_vectors_index ON blog_entries USING gist(vectors)[0m
+  [4;36;1mSQL (0.006926)[0m   [0;1mupdate blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'') || ' ' || coalesce(description,'')),'A')
+ [0m
+  [4;35;1mSQL (0.001812)[0m   [0m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'blog_entries'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;36;1mSQL (0.000278)[0m   [0;1mBEGIN[0m
+  [4;35;1mPK and serial sequence (0.002353)[0m   [0m SELECT attr.attname, name.nspname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relnamespace = name.oid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'blog_entries'::regclass
+[0m
+  [4;36;1mBlogEntry Create (0.000301)[0m   [0;1mINSERT INTO blog_entries ("title", "vectors", "description") VALUES('qqq', NULL, 'xxxyyy')[0m
+  [4;35;1mSQL (0.000446)[0m   [0mSELECT currval('blog_entries_id_seq')[0m
+  [4;36;1mSQL (0.000563)[0m   [0;1mupdate blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'') || ' ' || coalesce(description,'')),'A')
+ where id = 3[0m
+  [4;35;1mSQL (0.000915)[0m   [0mCOMMIT[0m
+  [4;36;1mBlogEntry Load (0.002434)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','qqq') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mBlogEntry Load (0.001047)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','xxxyyy') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mSQL (0.001355)[0m   [0;1mupdate blog_entries set vectors = to_tsvector('default',coalesce(title,'') || ' ' || coalesce(description,''))[0m
+  [4;35;1mSQL (0.000276)[0m   [0mBEGIN[0m
+  [4;36;1mBlogEntry Create (0.000449)[0m   [0;1mINSERT INTO blog_entries ("title", "vectors", "description") VALUES('uuii', NULL, 'ppkkjj')[0m
+  [4;35;1mSQL (0.000558)[0m   [0mSELECT currval('blog_entries_id_seq')[0m
+  [4;36;1mSQL (0.000921)[0m   [0;1mCOMMIT[0m
+  [4;35;1mBlogEntry Load (0.001087)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','uuii') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mBlogEntry Load (0.000959)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','ppkkjj') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mSQL (0.001113)[0m   [0mupdate blog_entries set vectors = to_tsvector('default',coalesce(title,'') || ' ' || coalesce(description,'')) where id = 3[0m
+  [4;36;1mBlogEntry Load (0.001518)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','uuii') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mBlogEntry Load (0.001133)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','ppkkjj') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mSQL (0.001192)[0m   [0;1mupdate blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'')),'A')
+ [0m
+  [4;35;1mBlogEntry Load (0.001453)[0m   [0mSELECT count(*) FROM blog_entries, to_tsquery('default','bob') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY 1 desc LIMIT ALL[0m
+  [4;36;1mBlogEntry Load (0.000824)[0m   [0;1mSELECT count(*) FROM blog_entries, to_tsquery('default','bob|zippy') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY 1 desc LIMIT ALL[0m
+  [4;35;1mBlogEntry Load (0.000722)[0m   [0mSELECT count(*) FROM blog_entries, to_tsquery('default','bob&opera') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY 1 desc LIMIT ALL[0m
+  [4;36;1mSQL (0.000695)[0m   [0;1mSELECT count(*) AS count_all FROM blog_entries [0m
+  [4;35;1mSQL (0.002918)[0m   [0mupdate blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(blog_entries.title,'')),'A')
+ || setweight( to_tsvector('default', 
+ coalesce(blog_comments.comment,'')),'B')
+ from blog_entries b2 left outer join blog_comments on blog_comments.blog_entry_id = b2.id where b2.id = blog_entries.id[0m
+  [4;36;1mBlogEntry Load (0.001346)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','bob') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mBlogEntry Load (0.001208)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','see') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mBlogEntry Load (0.001143)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','zippy') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mBlogEntry Load (0.001089)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','crack') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mSQL (0.001111)[0m   [0;1mupdate blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'')),'A')
+ [0m
+  [4;35;1mBlogEntry Load (0.001381)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','bob') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mSQL (0.001463)[0m   [0;1mupdate blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'') || ' ' || coalesce(description,'')),'A')
+ [0m
+  [4;35;1mBlogEntry Load (0.001267)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','bob') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mBlogEntry Load (0.001079)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','dined') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mBlogEntry Load (0.001293)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','shared') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mBlogEntry Load (0.001074)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','zippy') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mSQL (0.001449)[0m   [0m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'profiles'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;36;1mSQL (0.003418)[0m   [0;1malter table profiles add column public_vector tsvector[0m
+  [4;35;1mSQL (0.001940)[0m   [0mCREATE INDEX profiles_fts_public_vector_index ON profiles USING gist(public_vector)[0m
+  [4;36;1mSQL (0.001662)[0m   [0;1mupdate profiles set public_vector = to_tsvector('default',coalesce(name,'') || ' ' || coalesce(public_info,''))[0m
+  [4;35;1mSQL (0.001895)[0m   [0m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'profiles'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;36;1mSQL (0.001069)[0m   [0;1malter table profiles add column private_vector tsvector[0m
+  [4;35;1mSQL (0.001765)[0m   [0mCREATE INDEX profiles_fts_private_vector_index ON profiles USING gist(private_vector)[0m
+  [4;36;1mSQL (0.002106)[0m   [0;1mupdate profiles set private_vector = to_tsvector('default',coalesce(name,'') || ' ' || coalesce(private_info,''))[0m
+  [4;35;1mSQL (0.002236)[0m   [0m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'profiles'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;36;1mProfile Load (0.001361)[0m   [0;1mSELECT profiles.*, rank_cd(profiles.public_vector,tsearch_query) as tsearch_rank FROM profiles, to_tsquery('default','ben') as tsearch_query WHERE (profiles.public_vector @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mProfile Load (0.001870)[0m   [0mSELECT profiles.*, rank_cd(profiles.public_vector,tsearch_query) as tsearch_rank FROM profiles, to_tsquery('default','bob') as tsearch_query WHERE (profiles.public_vector @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mProfile Load (0.001418)[0m   [0;1mSELECT profiles.*, rank_cd(profiles.private_vector,tsearch_query) as tsearch_rank FROM profiles, to_tsquery('default','ben') as tsearch_query WHERE (profiles.private_vector @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mProfile Load (0.001269)[0m   [0mSELECT profiles.*, rank_cd(profiles.private_vector,tsearch_query) as tsearch_rank FROM profiles, to_tsquery('default','bob') as tsearch_query WHERE (profiles.private_vector @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mProfile Load (0.001096)[0m   [0;1mSELECT profiles.*, rank_cd(profiles.public_vector,tsearch_query) as tsearch_rank FROM profiles, to_tsquery('default','pumpkin') as tsearch_query WHERE (profiles.public_vector @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mProfile Load (0.001267)[0m   [0mSELECT profiles.*, rank_cd(profiles.private_vector,tsearch_query) as tsearch_rank FROM profiles, to_tsquery('default','pumpkin') as tsearch_query WHERE (profiles.private_vector @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mSQL (0.002048)[0m   [0;1mupdate blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'')),'A')
+ || setweight( to_tsvector('default', 
+ coalesce(description,'')),'B')
+ [0m
+  [4;35;1mBlogEntry Load (0.001224)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','bob') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mBlogEntry Load (0.001093)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','dined') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mBlogEntry Load (0.001240)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','shared') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mBlogEntry Load (0.001105)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','zippy') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mSQL (0.001823)[0m   [0mupdate blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'')),'A')
+ || setweight( to_tsvector('default', 
+ coalesce(description,'')),'B')
+ [0m
+  [4;36;1mBlogEntry Load (0.001411)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','bob') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mBlogEntry Load (0.001170)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','dined') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mBlogEntry Load (0.001247)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','shared') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mBlogEntry Load (0.001065)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','zippy') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mSQL (0.000544)[0m   [0;1mSET client_min_messages TO 'ERROR'[0m
+  [4;35;1mSQL (0.007096)[0m   [0mDROP TABLE blog_entries[0m
+  [4;36;1mSQL (0.003580)[0m   [0;1mDROP TABLE blog_comments[0m
+  [4;35;1mSQL (0.005798)[0m   [0mDROP TABLE profiles[0m
+  [4;36;1mSQL (0.011549)[0m   [0;1mCREATE TABLE blog_entries ("id" serial primary key, "title" character varying(255) DEFAULT NULL, "description" text DEFAULT NULL) [0m
+  [4;35;1mSQL (0.007525)[0m   [0mCREATE TABLE blog_comments ("id" serial primary key, "blog_entry_id" integer DEFAULT NULL, "name" character varying(255) DEFAULT NULL, "email" character varying(255) DEFAULT NULL, "url" character varying(255) DEFAULT NULL, "comment" text DEFAULT NULL) [0m
+  [4;36;1mSQL (0.005257)[0m   [0;1mCREATE TABLE profiles ("id" serial primary key, "name" character varying(255) DEFAULT NULL, "public_info" character varying(255) DEFAULT NULL, "private_info" character varying(255) DEFAULT NULL) [0m
+  [4;35;1mSQL (0.000000)[0m   [0mRuntimeError: ERROR	C42P07	Mrelation "schema_info" already exists	Fheap.c	L695	Rheap_create_with_catalog: CREATE TABLE schema_info (version integer)[0m
+  [4;36;1mSQL (0.004536)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'schema_info'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mSQL (0.001119)[0m   [0mUPDATE schema_info SET version = 1[0m
+  [4;36;1mSQL (0.002037)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'blog_entries'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mSQL (0.002722)[0m   [0malter table blog_entries add column vectors tsvector[0m
+  [4;36;1mSQL (0.004169)[0m   [0;1mCREATE INDEX blog_entries_fts_vectors_index ON blog_entries USING gist(vectors)[0m
+  [4;35;1mSQL (0.006660)[0m   [0mupdate blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'') || ' ' || coalesce(description,'')),'A')
+ [0m
+  [4;36;1mSQL (0.001832)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'blog_entries'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mSQL (0.000245)[0m   [0mBEGIN[0m
+  [4;36;1mPK and serial sequence (0.002698)[0m   [0;1m SELECT attr.attname, name.nspname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relnamespace = name.oid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'blog_entries'::regclass
+[0m
+  [4;35;1mBlogEntry Create (0.000366)[0m   [0mINSERT INTO blog_entries ("title", "vectors", "description") VALUES('qqq', NULL, 'xxxyyy')[0m
+  [4;36;1mSQL (0.000527)[0m   [0;1mSELECT currval('blog_entries_id_seq')[0m
+  [4;35;1mSQL (0.000633)[0m   [0mupdate blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'') || ' ' || coalesce(description,'')),'A')
+ where id = 3[0m
+  [4;36;1mSQL (0.000871)[0m   [0;1mCOMMIT[0m
+  [4;35;1mBlogEntry Load (0.002433)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','qqq') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mBlogEntry Load (0.001108)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','xxxyyy') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mSQL (0.001213)[0m   [0mupdate blog_entries set vectors = to_tsvector('default',coalesce(title,'') || ' ' || coalesce(description,''))[0m
+  [4;36;1mSQL (0.000265)[0m   [0;1mBEGIN[0m
+  [4;35;1mBlogEntry Create (0.000387)[0m   [0mINSERT INTO blog_entries ("title", "vectors", "description") VALUES('uuii', NULL, 'ppkkjj')[0m
+  [4;36;1mSQL (0.000507)[0m   [0;1mSELECT currval('blog_entries_id_seq')[0m
+  [4;35;1mSQL (0.000962)[0m   [0mCOMMIT[0m
+  [4;36;1mBlogEntry Load (0.001369)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','uuii') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mBlogEntry Load (0.001029)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','ppkkjj') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mSQL (0.001161)[0m   [0;1mupdate blog_entries set vectors = to_tsvector('default',coalesce(title,'') || ' ' || coalesce(description,'')) where id = 3[0m
+  [4;35;1mBlogEntry Load (0.001257)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','uuii') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mBlogEntry Load (0.001093)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','ppkkjj') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mSQL (0.001128)[0m   [0mupdate blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'')),'A')
+ [0m
+  [4;36;1mBlogEntry Load (0.001544)[0m   [0;1mSELECT count(*) FROM blog_entries, to_tsquery('default','bob') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY 1 desc LIMIT ALL[0m
+  [4;35;1mBlogEntry Load (0.000792)[0m   [0mSELECT count(*) FROM blog_entries, to_tsquery('default','bob|zippy') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY 1 desc LIMIT ALL[0m
+  [4;36;1mBlogEntry Load (0.000763)[0m   [0;1mSELECT count(*) FROM blog_entries, to_tsquery('default','bob&opera') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY 1 desc LIMIT ALL[0m
+  [4;35;1mSQL (0.000887)[0m   [0mSELECT count(*) AS count_all FROM blog_entries [0m
+  [4;36;1mSQL (0.002702)[0m   [0;1mupdate blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(blog_entries.title,'')),'A')
+ || setweight( to_tsvector('default', 
+ coalesce(blog_comments.comment,'')),'B')
+ from blog_entries b2 left outer join blog_comments on blog_comments.blog_entry_id = b2.id where b2.id = blog_entries.id[0m
+  [4;35;1mBlogEntry Load (0.001338)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','bob') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mBlogEntry Load (0.001274)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','see') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mBlogEntry Load (0.001145)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','zippy') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mBlogEntry Load (0.001075)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','crack') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mSQL (0.001226)[0m   [0mupdate blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'')),'A')
+ [0m
+  [4;36;1mBlogEntry Load (0.001253)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','bob') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mSQL (0.001537)[0m   [0mupdate blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'') || ' ' || coalesce(description,'')),'A')
+ [0m
+  [4;36;1mBlogEntry Load (0.001277)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','bob') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mBlogEntry Load (0.001083)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','dined') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mBlogEntry Load (0.001255)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','shared') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mBlogEntry Load (0.001117)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','zippy') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mSQL (0.002033)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'profiles'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mSQL (0.004237)[0m   [0malter table profiles add column public_vector tsvector[0m
+  [4;36;1mSQL (0.002088)[0m   [0;1mCREATE INDEX profiles_fts_public_vector_index ON profiles USING gist(public_vector)[0m
+  [4;35;1mSQL (0.001737)[0m   [0mupdate profiles set public_vector = to_tsvector('default',coalesce(name,'') || ' ' || coalesce(public_info,''))[0m
+  [4;36;1mSQL (0.002102)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'profiles'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mSQL (0.001418)[0m   [0malter table profiles add column private_vector tsvector[0m
+  [4;36;1mSQL (0.001908)[0m   [0;1mCREATE INDEX profiles_fts_private_vector_index ON profiles USING gist(private_vector)[0m
+  [4;35;1mSQL (0.001833)[0m   [0mupdate profiles set private_vector = to_tsvector('default',coalesce(name,'') || ' ' || coalesce(private_info,''))[0m
+  [4;36;1mSQL (0.002268)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'profiles'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mProfile Load (0.001345)[0m   [0mSELECT profiles.*, rank_cd(profiles.public_vector,tsearch_query) as tsearch_rank FROM profiles, to_tsquery('default','ben') as tsearch_query WHERE (profiles.public_vector @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mProfile Load (0.001402)[0m   [0;1mSELECT profiles.*, rank_cd(profiles.public_vector,tsearch_query) as tsearch_rank FROM profiles, to_tsquery('default','bob') as tsearch_query WHERE (profiles.public_vector @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mProfile Load (0.001312)[0m   [0mSELECT profiles.*, rank_cd(profiles.private_vector,tsearch_query) as tsearch_rank FROM profiles, to_tsquery('default','ben') as tsearch_query WHERE (profiles.private_vector @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mProfile Load (0.001281)[0m   [0;1mSELECT profiles.*, rank_cd(profiles.private_vector,tsearch_query) as tsearch_rank FROM profiles, to_tsquery('default','bob') as tsearch_query WHERE (profiles.private_vector @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mProfile Load (0.001106)[0m   [0mSELECT profiles.*, rank_cd(profiles.public_vector,tsearch_query) as tsearch_rank FROM profiles, to_tsquery('default','pumpkin') as tsearch_query WHERE (profiles.public_vector @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mProfile Load (0.001241)[0m   [0;1mSELECT profiles.*, rank_cd(profiles.private_vector,tsearch_query) as tsearch_rank FROM profiles, to_tsquery('default','pumpkin') as tsearch_query WHERE (profiles.private_vector @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mSQL (0.001449)[0m   [0mupdate blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'')),'A')
+ || setweight( to_tsvector('default', 
+ coalesce(description,'')),'B')
+ [0m
+  [4;36;1mBlogEntry Load (0.001342)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','bob') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mBlogEntry Load (0.001192)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','dined') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mBlogEntry Load (0.001321)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','shared') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mBlogEntry Load (0.001201)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','zippy') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mSQL (0.001188)[0m   [0;1mupdate blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'')),'A')
+ || setweight( to_tsvector('default', 
+ coalesce(description,'')),'B')
+ [0m
+  [4;35;1mBlogEntry Load (0.001167)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','bob') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mBlogEntry Load (0.001104)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','dined') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mBlogEntry Load (0.001252)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','shared') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mBlogEntry Load (0.001067)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','zippy') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mSQL (0.000543)[0m   [0;1mSET client_min_messages TO 'ERROR'[0m
+  [4;35;1mSQL (0.006749)[0m   [0mDROP TABLE blog_entries[0m
+  [4;36;1mSQL (0.003669)[0m   [0;1mDROP TABLE blog_comments[0m
+  [4;35;1mSQL (0.005785)[0m   [0mDROP TABLE profiles[0m
+  [4;36;1mSQL (0.011608)[0m   [0;1mCREATE TABLE blog_entries ("id" serial primary key, "title" character varying(255) DEFAULT NULL, "description" text DEFAULT NULL) [0m
+  [4;35;1mSQL (0.008278)[0m   [0mCREATE TABLE blog_comments ("id" serial primary key, "blog_entry_id" integer DEFAULT NULL, "name" character varying(255) DEFAULT NULL, "email" character varying(255) DEFAULT NULL, "url" character varying(255) DEFAULT NULL, "comment" text DEFAULT NULL) [0m
+  [4;36;1mSQL (0.005320)[0m   [0;1mCREATE TABLE profiles ("id" serial primary key, "name" character varying(255) DEFAULT NULL, "public_info" character varying(255) DEFAULT NULL, "private_info" character varying(255) DEFAULT NULL) [0m
+  [4;35;1mSQL (0.000000)[0m   [0mRuntimeError: ERROR	C42P07	Mrelation "schema_info" already exists	Fheap.c	L695	Rheap_create_with_catalog: CREATE TABLE schema_info (version integer)[0m
+  [4;36;1mSQL (0.004660)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'schema_info'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mSQL (0.001142)[0m   [0mUPDATE schema_info SET version = 1[0m
+  [4;36;1mSQL (0.001738)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'blog_entries'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mSQL (0.001767)[0m   [0malter table blog_entries add column vectors tsvector[0m
+  [4;36;1mSQL (0.004303)[0m   [0;1mCREATE INDEX blog_entries_fts_vectors_index ON blog_entries USING gist(vectors)[0m
+  [4;35;1mSQL (0.006734)[0m   [0mupdate blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'') || ' ' || coalesce(description,'')),'A')
+ [0m
+  [4;36;1mSQL (0.002096)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'blog_entries'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mSQL (0.000318)[0m   [0mBEGIN[0m
+  [4;36;1mPK and serial sequence (0.002776)[0m   [0;1m SELECT attr.attname, name.nspname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relnamespace = name.oid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'blog_entries'::regclass
+[0m
+  [4;35;1mBlogEntry Create (0.000388)[0m   [0mINSERT INTO blog_entries ("title", "vectors", "description") VALUES('qqq', NULL, 'xxxyyy')[0m
+  [4;36;1mSQL (0.000516)[0m   [0;1mSELECT currval('blog_entries_id_seq')[0m
+  [4;35;1mSQL (0.000615)[0m   [0mupdate blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'') || ' ' || coalesce(description,'')),'A')
+ where id = 3[0m
+  [4;36;1mSQL (0.001040)[0m   [0;1mCOMMIT[0m
+  [4;35;1mBlogEntry Load (0.002451)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','qqq') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mBlogEntry Load (0.001104)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','xxxyyy') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mSQL (0.001237)[0m   [0mupdate blog_entries set vectors = to_tsvector('default',coalesce(title,'') || ' ' || coalesce(description,''))[0m
+  [4;36;1mSQL (0.000278)[0m   [0;1mBEGIN[0m
+  [4;35;1mBlogEntry Create (0.000407)[0m   [0mINSERT INTO blog_entries ("title", "vectors", "description") VALUES('uuii', NULL, 'ppkkjj')[0m
+  [4;36;1mSQL (0.000541)[0m   [0;1mSELECT currval('blog_entries_id_seq')[0m
+  [4;35;1mSQL (0.000806)[0m   [0mCOMMIT[0m
+  [4;36;1mBlogEntry Load (0.001034)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','uuii') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mBlogEntry Load (0.001073)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','ppkkjj') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mSQL (0.001031)[0m   [0;1mupdate blog_entries set vectors = to_tsvector('default',coalesce(title,'') || ' ' || coalesce(description,'')) where id = 3[0m
+  [4;35;1mBlogEntry Load (0.001136)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','uuii') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mBlogEntry Load (0.001066)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','ppkkjj') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mSQL (0.001024)[0m   [0mupdate blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'')),'A')
+ [0m
+  [4;36;1mBlogEntry Load (0.001464)[0m   [0;1mSELECT count(*) FROM blog_entries, to_tsquery('default','bob') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY 1 desc LIMIT ALL[0m
+  [4;35;1mBlogEntry Load (0.000730)[0m   [0mSELECT count(*) FROM blog_entries, to_tsquery('default','bob|zippy') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY 1 desc LIMIT ALL[0m
+  [4;36;1mBlogEntry Load (0.000719)[0m   [0;1mSELECT count(*) FROM blog_entries, to_tsquery('default','bob&opera') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY 1 desc LIMIT ALL[0m
+  [4;35;1mSQL (0.000741)[0m   [0mSELECT count(*) AS count_all FROM blog_entries [0m
+  [4;36;1mSQL (0.002922)[0m   [0;1mupdate blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(blog_entries.title,'')),'A')
+ || setweight( to_tsvector('default', 
+ coalesce(blog_comments.comment,'')),'B')
+ from blog_entries b2 left outer join blog_comments on blog_comments.blog_entry_id = b2.id where b2.id = blog_entries.id[0m
+  [4;35;1mBlogEntry Load (0.001363)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','bob') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mBlogEntry Load (0.001134)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','see') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mBlogEntry Load (0.001088)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','zippy') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mBlogEntry Load (0.001081)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','crack') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mSQL (0.001321)[0m   [0mupdate blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'')),'A')
+ [0m
+  [4;36;1mBlogEntry Load (0.001292)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','bob') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mSQL (0.001523)[0m   [0mupdate blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'') || ' ' || coalesce(description,'')),'A')
+ [0m
+  [4;36;1mBlogEntry Load (0.001290)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','bob') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mBlogEntry Load (0.001097)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','dined') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mBlogEntry Load (0.001249)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','shared') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mBlogEntry Load (0.001128)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','zippy') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mSQL (0.001994)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'profiles'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mSQL (0.003680)[0m   [0malter table profiles add column public_vector tsvector[0m
+  [4;36;1mSQL (0.001971)[0m   [0;1mCREATE INDEX profiles_fts_public_vector_index ON profiles USING gist(public_vector)[0m
+  [4;35;1mSQL (0.001687)[0m   [0mupdate profiles set public_vector = to_tsvector('default',coalesce(name,'') || ' ' || coalesce(public_info,''))[0m
+  [4;36;1mSQL (0.002118)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'profiles'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mSQL (0.001117)[0m   [0malter table profiles add column private_vector tsvector[0m
+  [4;36;1mSQL (0.001817)[0m   [0;1mCREATE INDEX profiles_fts_private_vector_index ON profiles USING gist(private_vector)[0m
+  [4;35;1mSQL (0.001726)[0m   [0mupdate profiles set private_vector = to_tsvector('default',coalesce(name,'') || ' ' || coalesce(private_info,''))[0m
+  [4;36;1mSQL (0.002175)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'profiles'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mProfile Load (0.001354)[0m   [0mSELECT profiles.*, rank_cd(profiles.public_vector,tsearch_query) as tsearch_rank FROM profiles, to_tsquery('default','ben') as tsearch_query WHERE (profiles.public_vector @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mProfile Load (0.001420)[0m   [0;1mSELECT profiles.*, rank_cd(profiles.public_vector,tsearch_query) as tsearch_rank FROM profiles, to_tsquery('default','bob') as tsearch_query WHERE (profiles.public_vector @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mProfile Load (0.001258)[0m   [0mSELECT profiles.*, rank_cd(profiles.private_vector,tsearch_query) as tsearch_rank FROM profiles, to_tsquery('default','ben') as tsearch_query WHERE (profiles.private_vector @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mProfile Load (0.001239)[0m   [0;1mSELECT profiles.*, rank_cd(profiles.private_vector,tsearch_query) as tsearch_rank FROM profiles, to_tsquery('default','bob') as tsearch_query WHERE (profiles.private_vector @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mProfile Load (0.000944)[0m   [0mSELECT profiles.*, rank_cd(profiles.public_vector,tsearch_query) as tsearch_rank FROM profiles, to_tsquery('default','pumpkin') as tsearch_query WHERE (profiles.public_vector @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mProfile Load (0.001103)[0m   [0;1mSELECT profiles.*, rank_cd(profiles.private_vector,tsearch_query) as tsearch_rank FROM profiles, to_tsquery('default','pumpkin') as tsearch_query WHERE (profiles.private_vector @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mSQL (0.001490)[0m   [0mupdate blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'')),'A')
+ || setweight( to_tsvector('default', 
+ coalesce(description,'')),'B')
+ [0m
+  [4;36;1mBlogEntry Load (0.001341)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','bob') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mBlogEntry Load (0.001121)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','dined') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mBlogEntry Load (0.001225)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','shared') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mBlogEntry Load (0.001093)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','zippy') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mSQL (0.001378)[0m   [0;1mupdate blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'')),'A')
+ || setweight( to_tsvector('default', 
+ coalesce(description,'')),'B')
+ [0m
+  [4;35;1mBlogEntry Load (0.001261)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','bob') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mBlogEntry Load (0.001122)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','dined') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mBlogEntry Load (0.001281)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','shared') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mBlogEntry Load (0.001111)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','zippy') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mSQL (0.000605)[0m   [0;1mSET client_min_messages TO 'ERROR'[0m
+  [4;35;1mSQL (0.118291)[0m   [0mDROP TABLE blog_entries[0m
+  [4;36;1mSQL (0.004148)[0m   [0;1mDROP TABLE blog_comments[0m
+  [4;35;1mSQL (0.004945)[0m   [0mDROP TABLE profiles[0m
+  [4;36;1mSQL (0.012636)[0m   [0;1mCREATE TABLE blog_entries ("id" serial primary key, "title" character varying(255) DEFAULT NULL, "description" text DEFAULT NULL) [0m
+  [4;35;1mSQL (0.009709)[0m   [0mCREATE TABLE blog_comments ("id" serial primary key, "blog_entry_id" integer DEFAULT NULL, "name" character varying(255) DEFAULT NULL, "email" character varying(255) DEFAULT NULL, "url" character varying(255) DEFAULT NULL, "comment" text DEFAULT NULL) [0m
+  [4;36;1mSQL (0.009494)[0m   [0;1mCREATE TABLE profiles ("id" serial primary key, "name" character varying(255) DEFAULT NULL, "public_info" character varying(255) DEFAULT NULL, "private_info" character varying(255) DEFAULT NULL) [0m
+  [4;35;1mSQL (0.000000)[0m   [0mRuntimeError: ERROR	C42P07	Mrelation "schema_info" already exists	Fheap.c	L695	Rheap_create_with_catalog: CREATE TABLE schema_info (version integer)[0m
+  [4;36;1mSQL (0.055570)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'schema_info'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mSQL (0.001618)[0m   [0mUPDATE schema_info SET version = 1[0m
+  [4;36;1mSQL (0.001881)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'blog_entries'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mSQL (0.001945)[0m   [0malter table blog_entries add column vectors tsvector[0m
+  [4;36;1mSQL (0.004336)[0m   [0;1mCREATE INDEX blog_entries_fts_vectors_index ON blog_entries USING gist(vectors)[0m
+  [4;35;1mSQL (0.094181)[0m   [0mupdate blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'') || ' ' || coalesce(description,'')),'A')
+ [0m
+  [4;36;1mSQL (0.002063)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'blog_entries'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mSQL (0.000242)[0m   [0mBEGIN[0m
+  [4;36;1mPK and serial sequence (0.002744)[0m   [0;1m SELECT attr.attname, name.nspname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relnamespace = name.oid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'blog_entries'::regclass
+[0m
+  [4;35;1mBlogEntry Create (0.000375)[0m   [0mINSERT INTO blog_entries ("title", "vectors", "description") VALUES('qqq', NULL, 'xxxyyy')[0m
+  [4;36;1mSQL (0.000559)[0m   [0;1mSELECT currval('blog_entries_id_seq')[0m
+  [4;35;1mSQL (0.000619)[0m   [0mupdate blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'') || ' ' || coalesce(description,'')),'A')
+ where id = 3[0m
+  [4;36;1mSQL (0.000882)[0m   [0;1mCOMMIT[0m
+  [4;35;1mBlogEntry Load (0.002485)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','qqq') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mBlogEntry Load (0.001055)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','xxxyyy') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mSQL (0.001143)[0m   [0mupdate blog_entries set vectors = to_tsvector('default',coalesce(title,'') || ' ' || coalesce(description,''))[0m
+  [4;36;1mSQL (0.000246)[0m   [0;1mBEGIN[0m
+  [4;35;1mBlogEntry Create (0.000343)[0m   [0mINSERT INTO blog_entries ("title", "vectors", "description") VALUES('uuii', NULL, 'ppkkjj')[0m
+  [4;36;1mSQL (0.000410)[0m   [0;1mSELECT currval('blog_entries_id_seq')[0m
+  [4;35;1mSQL (0.000745)[0m   [0mCOMMIT[0m
+  [4;36;1mBlogEntry Load (0.000885)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','uuii') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mBlogEntry Load (0.000769)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','ppkkjj') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mSQL (0.001196)[0m   [0;1mupdate blog_entries set vectors = to_tsvector('default',coalesce(title,'') || ' ' || coalesce(description,'')) where id = 3[0m
+  [4;35;1mBlogEntry Load (0.001368)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','uuii') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mBlogEntry Load (0.001170)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','ppkkjj') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mSQL (0.001269)[0m   [0mupdate blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'')),'A')
+ [0m
+  [4;36;1mBlogEntry Load (0.001516)[0m   [0;1mSELECT count(*) FROM blog_entries, to_tsquery('default','bob') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY 1 desc LIMIT ALL[0m
+  [4;35;1mBlogEntry Load (0.000760)[0m   [0mSELECT count(*) FROM blog_entries, to_tsquery('default','bob|zippy') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY 1 desc LIMIT ALL[0m
+  [4;36;1mBlogEntry Load (0.000725)[0m   [0;1mSELECT count(*) FROM blog_entries, to_tsquery('default','bob&opera') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY 1 desc LIMIT ALL[0m
+  [4;35;1mSQL (0.000714)[0m   [0mSELECT count(*) AS count_all FROM blog_entries [0m
+  [4;36;1mSQL (0.002313)[0m   [0;1mupdate blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(blog_entries.title,'')),'A')
+ || setweight( to_tsvector('default', 
+ coalesce(blog_comments.comment,'')),'B')
+ from blog_entries b2 left outer join blog_comments on blog_comments.blog_entry_id = b2.id where b2.id = blog_entries.id[0m
+  [4;35;1mBlogEntry Load (0.001355)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','bob') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mBlogEntry Load (0.001136)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','see') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mBlogEntry Load (0.001101)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','zippy') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mBlogEntry Load (0.001073)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','crack') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mSQL (0.001199)[0m   [0mupdate blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'')),'A')
+ [0m
+  [4;36;1mBlogEntry Load (0.001214)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','bob') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mSQL (0.001470)[0m   [0mupdate blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'') || ' ' || coalesce(description,'')),'A')
+ [0m
+  [4;36;1mBlogEntry Load (0.001276)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','bob') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mBlogEntry Load (0.001193)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','dined') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mBlogEntry Load (0.001353)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','shared') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mBlogEntry Load (0.001094)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','zippy') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mSQL (0.001422)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'profiles'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mSQL (0.003632)[0m   [0malter table profiles add column public_vector tsvector[0m
+  [4;36;1mSQL (0.002104)[0m   [0;1mCREATE INDEX profiles_fts_public_vector_index ON profiles USING gist(public_vector)[0m
+  [4;35;1mSQL (0.001594)[0m   [0mupdate profiles set public_vector = to_tsvector('default',coalesce(name,'') || ' ' || coalesce(public_info,''))[0m
+  [4;36;1mSQL (0.002130)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'profiles'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mSQL (0.001188)[0m   [0malter table profiles add column private_vector tsvector[0m
+  [4;36;1mSQL (0.001982)[0m   [0;1mCREATE INDEX profiles_fts_private_vector_index ON profiles USING gist(private_vector)[0m
+  [4;35;1mSQL (0.001722)[0m   [0mupdate profiles set private_vector = to_tsvector('default',coalesce(name,'') || ' ' || coalesce(private_info,''))[0m
+  [4;36;1mSQL (0.002140)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'profiles'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mProfile Load (0.001328)[0m   [0mSELECT profiles.*, rank_cd(profiles.public_vector,tsearch_query) as tsearch_rank FROM profiles, to_tsquery('default','ben') as tsearch_query WHERE (profiles.public_vector @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mProfile Load (0.001422)[0m   [0;1mSELECT profiles.*, rank_cd(profiles.public_vector,tsearch_query) as tsearch_rank FROM profiles, to_tsquery('default','bob') as tsearch_query WHERE (profiles.public_vector @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mProfile Load (0.001539)[0m   [0mSELECT profiles.*, rank_cd(profiles.private_vector,tsearch_query) as tsearch_rank FROM profiles, to_tsquery('default','ben') as tsearch_query WHERE (profiles.private_vector @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mProfile Load (0.001265)[0m   [0;1mSELECT profiles.*, rank_cd(profiles.private_vector,tsearch_query) as tsearch_rank FROM profiles, to_tsquery('default','bob') as tsearch_query WHERE (profiles.private_vector @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mProfile Load (0.000999)[0m   [0mSELECT profiles.*, rank_cd(profiles.public_vector,tsearch_query) as tsearch_rank FROM profiles, to_tsquery('default','pumpkin') as tsearch_query WHERE (profiles.public_vector @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mProfile Load (0.001085)[0m   [0;1mSELECT profiles.*, rank_cd(profiles.private_vector,tsearch_query) as tsearch_rank FROM profiles, to_tsquery('default','pumpkin') as tsearch_query WHERE (profiles.private_vector @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mSQL (0.001418)[0m   [0mupdate blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'')),'A')
+ || setweight( to_tsvector('default', 
+ coalesce(description,'')),'B')
+ [0m
+  [4;36;1mBlogEntry Load (0.001294)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','bob') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mBlogEntry Load (0.001115)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','dined') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mBlogEntry Load (0.001227)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','shared') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mBlogEntry Load (0.001087)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','zippy') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mSQL (0.001576)[0m   [0;1mupdate blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'')),'A')
+ || setweight( to_tsvector('default', 
+ coalesce(description,'')),'B')
+ [0m
+  [4;35;1mBlogEntry Load (0.001303)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','bob') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mBlogEntry Load (0.001148)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','dined') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mBlogEntry Load (0.001270)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','shared') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mBlogEntry Load (0.001074)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','zippy') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
