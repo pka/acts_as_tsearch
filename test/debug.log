@@ -1826,3 +1826,299 @@
   [4;36;1mBlogEntry Load (0.001148)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','dined') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
   [4;35;1mBlogEntry Load (0.001270)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','shared') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
   [4;36;1mBlogEntry Load (0.001074)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','zippy') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mSQL (0.000617)[0m   [0;1mSET client_min_messages TO 'ERROR'[0m
+  [4;35;1mSQL (0.057610)[0m   [0mDROP TABLE blog_entries[0m
+  [4;36;1mSQL (0.004548)[0m   [0;1mDROP TABLE blog_comments[0m
+  [4;35;1mSQL (0.004428)[0m   [0mDROP TABLE profiles[0m
+  [4;36;1mSQL (0.014362)[0m   [0;1mCREATE TABLE blog_entries ("id" serial primary key, "title" character varying(255) DEFAULT NULL, "description" text DEFAULT NULL) [0m
+  [4;35;1mSQL (0.008398)[0m   [0mCREATE TABLE blog_comments ("id" serial primary key, "blog_entry_id" integer DEFAULT NULL, "name" character varying(255) DEFAULT NULL, "email" character varying(255) DEFAULT NULL, "url" character varying(255) DEFAULT NULL, "comment" text DEFAULT NULL) [0m
+  [4;36;1mSQL (0.143107)[0m   [0;1mCREATE TABLE profiles ("id" serial primary key, "name" character varying(255) DEFAULT NULL, "public_info" character varying(255) DEFAULT NULL, "private_info" character varying(255) DEFAULT NULL) [0m
+  [4;35;1mSQL (0.000000)[0m   [0mRuntimeError: ERROR	C42P07	Mrelation "schema_info" already exists	Fheap.c	L695	Rheap_create_with_catalog: CREATE TABLE schema_info (version integer)[0m
+  [4;36;1mSQL (0.349214)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'schema_info'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mSQL (0.001421)[0m   [0mUPDATE schema_info SET version = 1[0m
+  [4;36;1mSQL (0.001668)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'blog_entries'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mSQL (0.002295)[0m   [0malter table blog_entries add column vectors tsvector[0m
+  [4;36;1mSQL (0.004704)[0m   [0;1mCREATE INDEX blog_entries_fts_vectors_index ON blog_entries USING gist(vectors)[0m
+  [4;35;1mSQL (0.094120)[0m   [0mupdate blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'') || ' ' || coalesce(description,'')),'A')
+ [0m
+  [4;36;1mSQL (0.002025)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'blog_entries'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mSQL (0.000240)[0m   [0mBEGIN[0m
+  [4;36;1mPK and serial sequence (0.002847)[0m   [0;1m SELECT attr.attname, name.nspname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relnamespace = name.oid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'blog_entries'::regclass
+[0m
+  [4;35;1mBlogEntry Create (0.000371)[0m   [0mINSERT INTO blog_entries ("title", "vectors", "description") VALUES('qqq', NULL, 'xxxyyy')[0m
+  [4;36;1mSQL (0.000565)[0m   [0;1mSELECT currval('blog_entries_id_seq')[0m
+  [4;35;1mSQL (0.000681)[0m   [0mupdate blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'') || ' ' || coalesce(description,'')),'A')
+ where id = 3[0m
+  [4;36;1mSQL (0.001083)[0m   [0;1mCOMMIT[0m
+  [4;35;1mBlogEntry Load (0.002582)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','qqq') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mBlogEntry Load (0.001049)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','xxxyyy') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mSQL (0.001327)[0m   [0mupdate blog_entries set vectors = to_tsvector('default',coalesce(title,'') || ' ' || coalesce(description,''))[0m
+  [4;36;1mSQL (0.000274)[0m   [0;1mBEGIN[0m
+  [4;35;1mBlogEntry Create (0.000436)[0m   [0mINSERT INTO blog_entries ("title", "vectors", "description") VALUES('uuii', NULL, 'ppkkjj')[0m
+  [4;36;1mSQL (0.000532)[0m   [0;1mSELECT currval('blog_entries_id_seq')[0m
+  [4;35;1mSQL (0.000876)[0m   [0mCOMMIT[0m
+  [4;36;1mBlogEntry Load (0.001025)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','uuii') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mBlogEntry Load (0.001137)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','ppkkjj') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mSQL (0.001369)[0m   [0;1mupdate blog_entries set vectors = to_tsvector('default',coalesce(title,'') || ' ' || coalesce(description,'')) where id = 3[0m
+  [4;35;1mBlogEntry Load (0.001241)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','uuii') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mBlogEntry Load (0.001069)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','ppkkjj') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mSQL (0.001293)[0m   [0mupdate blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'')),'A')
+ [0m
+  [4;36;1mBlogEntry Load (0.001449)[0m   [0;1mSELECT count(*) FROM blog_entries, to_tsquery('default','bob') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY 1 desc LIMIT ALL[0m
+  [4;35;1mBlogEntry Load (0.000803)[0m   [0mSELECT count(*) FROM blog_entries, to_tsquery('default','bob|zippy') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY 1 desc LIMIT ALL[0m
+  [4;36;1mBlogEntry Load (0.000738)[0m   [0;1mSELECT count(*) FROM blog_entries, to_tsquery('default','bob&opera') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY 1 desc LIMIT ALL[0m
+  [4;35;1mSQL (0.000725)[0m   [0mSELECT count(*) AS count_all FROM blog_entries [0m
+  [4;36;1mSQL (0.002824)[0m   [0;1mupdate blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(blog_entries.title,'')),'A')
+ || setweight( to_tsvector('default', 
+ coalesce(blog_comments.comment,'')),'B')
+ from blog_entries b2 left outer join blog_comments on blog_comments.blog_entry_id = b2.id where b2.id = blog_entries.id[0m
+  [4;35;1mBlogEntry Load (0.001292)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','bob') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mBlogEntry Load (0.001123)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','see') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mBlogEntry Load (0.001100)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','zippy') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mBlogEntry Load (0.001109)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','crack') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mSQL (0.001130)[0m   [0mupdate blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'')),'A')
+ [0m
+  [4;36;1mBlogEntry Load (0.001363)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','bob') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mSQL (0.001480)[0m   [0mupdate blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'') || ' ' || coalesce(description,'')),'A')
+ [0m
+  [4;36;1mBlogEntry Load (0.001289)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','bob') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mBlogEntry Load (0.001116)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','dined') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mBlogEntry Load (0.001284)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','shared') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mBlogEntry Load (0.001124)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','zippy') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mSQL (0.002029)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'profiles'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mSQL (0.004257)[0m   [0malter table profiles add column public_vector tsvector[0m
+  [4;36;1mSQL (0.002590)[0m   [0;1mCREATE INDEX profiles_fts_public_vector_index ON profiles USING gist(public_vector)[0m
+  [4;35;1mSQL (0.001578)[0m   [0mupdate profiles set public_vector = to_tsvector('default',coalesce(name,'') || ' ' || coalesce(public_info,''))[0m
+  [4;36;1mSQL (0.002153)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'profiles'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mSQL (0.001163)[0m   [0malter table profiles add column private_vector tsvector[0m
+  [4;36;1mSQL (0.002271)[0m   [0;1mCREATE INDEX profiles_fts_private_vector_index ON profiles USING gist(private_vector)[0m
+  [4;35;1mSQL (0.001705)[0m   [0mupdate profiles set private_vector = to_tsvector('default',coalesce(name,'') || ' ' || coalesce(private_info,''))[0m
+  [4;36;1mSQL (0.002325)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'profiles'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mProfile Load (0.001344)[0m   [0mSELECT profiles.*, rank_cd(profiles.public_vector,tsearch_query) as tsearch_rank FROM profiles, to_tsquery('default','ben') as tsearch_query WHERE (profiles.public_vector @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mProfile Load (0.001336)[0m   [0;1mSELECT profiles.*, rank_cd(profiles.public_vector,tsearch_query) as tsearch_rank FROM profiles, to_tsquery('default','bob') as tsearch_query WHERE (profiles.public_vector @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mProfile Load (0.001295)[0m   [0mSELECT profiles.*, rank_cd(profiles.private_vector,tsearch_query) as tsearch_rank FROM profiles, to_tsquery('default','ben') as tsearch_query WHERE (profiles.private_vector @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mProfile Load (0.001146)[0m   [0;1mSELECT profiles.*, rank_cd(profiles.private_vector,tsearch_query) as tsearch_rank FROM profiles, to_tsquery('default','bob') as tsearch_query WHERE (profiles.private_vector @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mProfile Load (0.000978)[0m   [0mSELECT profiles.*, rank_cd(profiles.public_vector,tsearch_query) as tsearch_rank FROM profiles, to_tsquery('default','pumpkin') as tsearch_query WHERE (profiles.public_vector @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mProfile Load (0.001147)[0m   [0;1mSELECT profiles.*, rank_cd(profiles.private_vector,tsearch_query) as tsearch_rank FROM profiles, to_tsquery('default','pumpkin') as tsearch_query WHERE (profiles.private_vector @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mSQL (0.001602)[0m   [0mupdate blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'')),'A')
+ || setweight( to_tsvector('default', 
+ coalesce(description,'')),'B')
+ [0m
+  [4;36;1mBlogEntry Load (0.001369)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','bob') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mBlogEntry Load (0.001136)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','dined') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mBlogEntry Load (0.001248)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','shared') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mBlogEntry Load (0.001092)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','zippy') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mSQL (0.001796)[0m   [0;1mupdate blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'')),'A')
+ || setweight( to_tsvector('default', 
+ coalesce(description,'')),'B')
+ [0m
+  [4;35;1mBlogEntry Load (0.001362)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','bob') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mBlogEntry Load (0.001166)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','dined') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mBlogEntry Load (0.001282)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','shared') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mBlogEntry Load (0.001117)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','zippy') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mSQL (0.000543)[0m   [0;1mSET client_min_messages TO 'ERROR'[0m
+  [4;35;1mSQL (0.007836)[0m   [0mDROP TABLE blog_entries[0m
+  [4;36;1mSQL (0.004055)[0m   [0;1mDROP TABLE blog_comments[0m
+  [4;35;1mSQL (0.006536)[0m   [0mDROP TABLE profiles[0m
+  [4;36;1mSQL (0.011118)[0m   [0;1mCREATE TABLE blog_entries ("id" serial primary key, "title" character varying(255) DEFAULT NULL, "description" text DEFAULT NULL) [0m
+  [4;35;1mSQL (0.007763)[0m   [0mCREATE TABLE blog_comments ("id" serial primary key, "blog_entry_id" integer DEFAULT NULL, "name" character varying(255) DEFAULT NULL, "email" character varying(255) DEFAULT NULL, "url" character varying(255) DEFAULT NULL, "comment" text DEFAULT NULL) [0m
+  [4;36;1mSQL (0.005404)[0m   [0;1mCREATE TABLE profiles ("id" serial primary key, "name" character varying(255) DEFAULT NULL, "public_info" character varying(255) DEFAULT NULL, "private_info" character varying(255) DEFAULT NULL) [0m
+  [4;35;1mSQL (0.000000)[0m   [0mRuntimeError: ERROR	C42P07	Mrelation "schema_info" already exists	Fheap.c	L695	Rheap_create_with_catalog: CREATE TABLE schema_info (version integer)[0m
+  [4;36;1mSQL (0.004376)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'schema_info'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mSQL (0.001077)[0m   [0mUPDATE schema_info SET version = 1[0m
+  [4;36;1mSQL (0.001857)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'blog_entries'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mSQL (0.001631)[0m   [0malter table blog_entries add column vectors tsvector[0m
+  [4;36;1mSQL (0.004230)[0m   [0;1mCREATE INDEX blog_entries_fts_vectors_index ON blog_entries USING gist(vectors)[0m
+  [4;35;1mSQL (0.006729)[0m   [0mupdate blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'') || ' ' || coalesce(description,'')),'A')
+ [0m
+  [4;36;1mSQL (0.001918)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'blog_entries'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mSQL (0.000235)[0m   [0mBEGIN[0m
+  [4;36;1mPK and serial sequence (0.002628)[0m   [0;1m SELECT attr.attname, name.nspname, seq.relname
+ FROM pg_class seq,
+ pg_attribute attr,
+ pg_depend dep,
+ pg_namespace name,
+ pg_constraint cons
+ WHERE seq.oid = dep.objid
+ AND seq.relnamespace = name.oid
+ AND seq.relkind = 'S'
+ AND attr.attrelid = dep.refobjid
+ AND attr.attnum = dep.refobjsubid
+ AND attr.attrelid = cons.conrelid
+ AND attr.attnum = cons.conkey[1]
+ AND cons.contype = 'p'
+ AND dep.refobjid = 'blog_entries'::regclass
+[0m
+  [4;35;1mBlogEntry Create (0.000345)[0m   [0mINSERT INTO blog_entries ("title", "vectors", "description") VALUES('qqq', NULL, 'xxxyyy')[0m
+  [4;36;1mSQL (0.000504)[0m   [0;1mSELECT currval('blog_entries_id_seq')[0m
+  [4;35;1mSQL (0.000626)[0m   [0mupdate blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'') || ' ' || coalesce(description,'')),'A')
+ where id = 3[0m
+  [4;36;1mSQL (0.000792)[0m   [0;1mCOMMIT[0m
+  [4;35;1mBlogEntry Load (0.002296)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','qqq') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mBlogEntry Load (0.001045)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','xxxyyy') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mSQL (0.001405)[0m   [0mupdate blog_entries set vectors = to_tsvector('default',coalesce(title,'') || ' ' || coalesce(description,''))[0m
+  [4;36;1mSQL (0.000273)[0m   [0;1mBEGIN[0m
+  [4;35;1mBlogEntry Create (0.000420)[0m   [0mINSERT INTO blog_entries ("title", "vectors", "description") VALUES('uuii', NULL, 'ppkkjj')[0m
+  [4;36;1mSQL (0.000570)[0m   [0;1mSELECT currval('blog_entries_id_seq')[0m
+  [4;35;1mSQL (0.000818)[0m   [0mCOMMIT[0m
+  [4;36;1mBlogEntry Load (0.001161)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','uuii') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mBlogEntry Load (0.000937)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','ppkkjj') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mSQL (0.001294)[0m   [0;1mupdate blog_entries set vectors = to_tsvector('default',coalesce(title,'') || ' ' || coalesce(description,'')) where id = 3[0m
+  [4;35;1mBlogEntry Load (0.001239)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','uuii') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mBlogEntry Load (0.001065)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','ppkkjj') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mSQL (0.001864)[0m   [0mupdate blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'')),'A')
+ [0m
+  [4;36;1mBlogEntry Load (0.001625)[0m   [0;1mSELECT count(*) FROM blog_entries, to_tsquery('default','bob') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY 1 desc LIMIT ALL[0m
+  [4;35;1mBlogEntry Load (0.000830)[0m   [0mSELECT count(*) FROM blog_entries, to_tsquery('default','bob|zippy') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY 1 desc LIMIT ALL[0m
+  [4;36;1mBlogEntry Load (0.000795)[0m   [0;1mSELECT count(*) FROM blog_entries, to_tsquery('default','bob&opera') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY 1 desc LIMIT ALL[0m
+  [4;35;1mSQL (0.000652)[0m   [0mSELECT count(*) AS count_all FROM blog_entries [0m
+  [4;36;1mSQL (0.002894)[0m   [0;1mupdate blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(blog_entries.title,'')),'A')
+ || setweight( to_tsvector('default', 
+ coalesce(blog_comments.comment,'')),'B')
+ from blog_entries b2 left outer join blog_comments on blog_comments.blog_entry_id = b2.id where b2.id = blog_entries.id[0m
+  [4;35;1mBlogEntry Load (0.001299)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','bob') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mBlogEntry Load (0.001241)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','see') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mBlogEntry Load (0.001136)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','zippy') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mBlogEntry Load (0.001080)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','crack') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mSQL (0.001339)[0m   [0mupdate blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'')),'A')
+ [0m
+  [4;36;1mBlogEntry Load (0.001272)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','bob') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mSQL (0.001358)[0m   [0mupdate blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'') || ' ' || coalesce(description,'')),'A')
+ [0m
+  [4;36;1mBlogEntry Load (0.001263)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','bob') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mBlogEntry Load (0.001168)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','dined') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mBlogEntry Load (0.001232)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','shared') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mBlogEntry Load (0.001097)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','zippy') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mSQL (0.001966)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'profiles'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mSQL (0.004067)[0m   [0malter table profiles add column public_vector tsvector[0m
+  [4;36;1mSQL (0.002569)[0m   [0;1mCREATE INDEX profiles_fts_public_vector_index ON profiles USING gist(public_vector)[0m
+  [4;35;1mSQL (0.001699)[0m   [0mupdate profiles set public_vector = to_tsvector('default',coalesce(name,'') || ' ' || coalesce(public_info,''))[0m
+  [4;36;1mSQL (0.001941)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'profiles'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mSQL (0.001239)[0m   [0malter table profiles add column private_vector tsvector[0m
+  [4;36;1mSQL (0.001933)[0m   [0;1mCREATE INDEX profiles_fts_private_vector_index ON profiles USING gist(private_vector)[0m
+  [4;35;1mSQL (0.001723)[0m   [0mupdate profiles set private_vector = to_tsvector('default',coalesce(name,'') || ' ' || coalesce(private_info,''))[0m
+  [4;36;1mSQL (0.002073)[0m   [0;1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = 'profiles'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [4;35;1mProfile Load (0.001390)[0m   [0mSELECT profiles.*, rank_cd(profiles.public_vector,tsearch_query) as tsearch_rank FROM profiles, to_tsquery('default','ben') as tsearch_query WHERE (profiles.public_vector @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mProfile Load (0.001461)[0m   [0;1mSELECT profiles.*, rank_cd(profiles.public_vector,tsearch_query) as tsearch_rank FROM profiles, to_tsquery('default','bob') as tsearch_query WHERE (profiles.public_vector @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mProfile Load (0.001349)[0m   [0mSELECT profiles.*, rank_cd(profiles.private_vector,tsearch_query) as tsearch_rank FROM profiles, to_tsquery('default','ben') as tsearch_query WHERE (profiles.private_vector @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mProfile Load (0.001271)[0m   [0;1mSELECT profiles.*, rank_cd(profiles.private_vector,tsearch_query) as tsearch_rank FROM profiles, to_tsquery('default','bob') as tsearch_query WHERE (profiles.private_vector @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mProfile Load (0.000992)[0m   [0mSELECT profiles.*, rank_cd(profiles.public_vector,tsearch_query) as tsearch_rank FROM profiles, to_tsquery('default','pumpkin') as tsearch_query WHERE (profiles.public_vector @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mProfile Load (0.001143)[0m   [0;1mSELECT profiles.*, rank_cd(profiles.private_vector,tsearch_query) as tsearch_rank FROM profiles, to_tsquery('default','pumpkin') as tsearch_query WHERE (profiles.private_vector @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mSQL (0.001400)[0m   [0mupdate blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'')),'A')
+ || setweight( to_tsvector('default', 
+ coalesce(description,'')),'B')
+ [0m
+  [4;36;1mBlogEntry Load (0.001341)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','bob') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mBlogEntry Load (0.001114)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','dined') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mBlogEntry Load (0.001218)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','shared') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mBlogEntry Load (0.001070)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','zippy') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mSQL (0.001311)[0m   [0;1mupdate blog_entries set vectors = setweight( to_tsvector('default', 
+ coalesce(title,'')),'A')
+ || setweight( to_tsvector('default', 
+ coalesce(description,'')),'B')
+ [0m
+  [4;35;1mBlogEntry Load (0.001355)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','bob') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mBlogEntry Load (0.001161)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','dined') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;35;1mBlogEntry Load (0.001219)[0m   [0mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','shared') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m
+  [4;36;1mBlogEntry Load (0.001089)[0m   [0;1mSELECT blog_entries.*, rank_cd(blog_entries.vectors,tsearch_query) as tsearch_rank FROM blog_entries, to_tsquery('default','zippy') as tsearch_query WHERE (blog_entries.vectors @@ tsearch_query) ORDER BY tsearch_rank desc LIMIT 100[0m

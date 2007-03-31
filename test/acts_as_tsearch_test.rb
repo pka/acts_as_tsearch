@@ -208,7 +208,55 @@ class ActsAsTsearchTest < Test::Unit::TestCase
     
     p = Profile.find_by_tsearch("pumpkin",nil,{:vector => "private_vector"})[0]
     assert p.name == "ben", "Couln't find pumpkin in private profile search"
+  end
+  
+  def test_clean_query
+    #FIXME: call directly -CMB
+    BlogEntry.acts_as_tsearch :fields => "title"
+    assert_equal '"o\'\'reily bookstore"', BlogEntry.clean_query('"O\'Reily bookstore"')
+    assert_equal '+test -test2',           BlogEntry.clean_query('+test -test2')
+    assert_equal 'uppercase',              BlogEntry.clean_query('UpPerCaSe')
+    assert_equal 'stripped whitespace',    BlogEntry.clean_query('   stripped whitespace    ')
+    assert_equal 'reserved',               BlogEntry.clean_query('(!&|reserved)')
+  end
+  
+  def test_query_to_terms
+    #FIXME: call directly -CMB
+    BlogEntry.acts_as_tsearch :fields => "title"
+    assert_equal [ ['&', 'text'] ],                BlogEntry.query_to_terms('text')
+    assert_equal [ ['&', 'text'], ['&', 'asdf'] ], BlogEntry.query_to_terms('text asdf')
+    assert_equal [ ['&', 'text'], ['&', 'asdf'] ], BlogEntry.query_to_terms('text +asdf')
+    assert_equal [ ['&', 'text'], ['&', 'asdf'] ], BlogEntry.query_to_terms('text and asdf')
+    assert_equal [ ['&', 'text'], ['|', 'asdf'] ], BlogEntry.query_to_terms('text or asdf')
+    assert_equal [ ['&', 'text'], ['&', '!sdf'] ], BlogEntry.query_to_terms('+text -sdf')
     
+    assert_equal [ ['&', 'a'], ['&', '!b'] ], BlogEntry.query_to_terms('+a and -b')
+    assert_equal [ ['&', 'a'], ['|', '!b'] ], BlogEntry.query_to_terms('+a or -b')
+    
+    assert_equal [ ['&', '(a)'] ],   BlogEntry.query_to_terms('"a"')
+    assert_equal [ ['&', '(a)'] ],   BlogEntry.query_to_terms('"+-&|  -a  "')
+    assert_equal [ ['&', '!(a)'] ],  BlogEntry.query_to_terms('-"a"')
+    assert_equal [ ['&', '(a&b)'] ], BlogEntry.query_to_terms('"a  b "')
+    assert_equal [ ['&', '(a&b)'] ], BlogEntry.query_to_terms('"a  b ')
+    
+    assert_equal [ ['&', '(a&b)'], ['|', '!(c&d&f)'] ],                     BlogEntry.query_to_terms('"a  b" or -"c d f')
+    assert_equal [ ['&', '!a'], ['&', '!(c&d)'], ['|', 'b'], ['&', 'e'] ],  BlogEntry.query_to_terms('-a -"c d" or b +e')
+  end
+  
+  def test_fix_tsearch_query
+    #FIXME: call directly -CMB
+    BlogEntry.acts_as_tsearch :fields => "title"
+    assert_equal '', BlogEntry.fix_tsearch_query('')
+    assert_equal '', BlogEntry.fix_tsearch_query('(!&|)')
+    
+    assert_equal '()', BlogEntry.fix_tsearch_query('""')
+    assert_equal '()', BlogEntry.fix_tsearch_query('+"  &  "')
+    
+    assert_equal 'text', BlogEntry.fix_tsearch_query('text')
+    assert_equal 'text', BlogEntry.fix_tsearch_query('  Text ')
+    
+    assert_equal 'searching&for&something|not',            BlogEntry.fix_tsearch_query('searching for AND something OR not')
+    assert_equal 'word&(some&phrase)&!this&that|(it&was)', BlogEntry.fix_tsearch_query('word +"some phrase" -this and that or "it was')
   end
   
 end

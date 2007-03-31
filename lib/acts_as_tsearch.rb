@@ -193,28 +193,26 @@ module TsearchMixin
             find_by_tsearch(search_string, options, tsearch_options)[0][:count].to_i
         end        
 
-        #Very crude attempt at creating a tsearch query compliant search phrase from a "google" type search string
-        def fix_tsearch_query(search_string)
-          q = search_string
-          
-          #strip ( ) if they don't match and/or aren't nested properly
-          ["()"].each do |s|
-            p = 0
-            0.upto(q.size-1) do |i|
-              p += 1 if q[i] == s[0]
-              p -= 1 if q[i] == s[1]
-              break if p < 0
-            end
-            if p != 0
-              q = q.strip.gsub(s[0]," ").gsub(s[1]," ")
-            end
+        # Create a tsearch_query from a Google like query (and or " +)
+        def fix_tsearch_query(query)
+          terms = query_to_terms(clean_query(query))
+          terms.flatten!
+          terms.shift
+          terms.join
+        end
+        
+        # Convert a search query into an array of terms [prefix, term] where
+        # Prefix is | or & (tsearch and/or) and term is a phrase (with or with negation)
+        def query_to_terms(query)
+          query.scan(/(\+|or \-?|and \-?|\-)?("[^"]*"?|[\w\-]+)/).collect do |prefix, term|
+            term = "(#{term.scan(/[\w']+/).join('&')})" if term[0,1] == '"'
+            term = "!#{term}" if prefix =~ /\-/
+            [(prefix =~ /or/) ? '|' : '&', term] 
           end
-          
-          #strip operator characters, replace human boolean words with operators, support google's convention of "-" == "not"
-          q = q.strip.gsub("&"," ").gsub("|"," ").gsub("!"," ").gsub(","," ").gsub("'","''").gsub(" -"," !").gsub(" and ", "&").gsub(" or ","|")
-          
-          #join everything back up and "and" them together
-          q.split(" ").join(" & ")
+        end
+        
+        def clean_query(query)
+          query.gsub(/[^\w\-\+'"]+/, " ").gsub("'", "''").strip.downcase     
         end
         
         #checks to see if vector column exists.  if it doesn't exist, create it and update isn't index.
@@ -356,9 +354,16 @@ module TsearchMixin
       module InstanceMethods
         
         def update_vector_row
-          self.class.tsearch_config.keys.each do |k|
-            if self.class.tsearch_config[k][:auto_update_index] == true
-              self.class.update_vector(self.id,k.to_s)
+          # self.class.tsearch_config.keys.each do |k|
+          #    if self.class.tsearch_config[k][:auto_update_index] == true
+          #      self.class.update_vector(self.id,k.to_s)
+          
+          #fixes STI problems - contributed by Craig Barber http://code.google.com/p/acts-as-tsearch/issues/detail?id=1&can=2&q=
+          klass = self.class
+          klass = klass.superclass while klass.tsearch_config.nil?
+          klass.tsearch_config.keys.each do |k|
+            if klass.tsearch_config[k][:auto_update_index] == true
+              klass.update_vector(self.id,k.to_s)            
             end
           end
         end
