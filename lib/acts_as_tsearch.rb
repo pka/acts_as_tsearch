@@ -1,4 +1,5 @@
 require 'active_record'
+require 'postgres_extensions'
 
 module TsearchMixin
   module Acts #:nodoc:
