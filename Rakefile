@@ -2,7 +2,7 @@ require 'rake'
 require 'rake/testtask'
 require 'rake/rdoctask'
 
-desc 'Default: run unit tests.'
+desc 'Default: run unit tests. Make sure to follow setup instructions on http://code.google.com/p/acts-as-tsearch/wiki/Testing'
 task :default => :test
 
 desc 'Test the acts_as_tsearch plugin.'
