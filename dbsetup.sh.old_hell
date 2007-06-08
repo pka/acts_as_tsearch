@@ -32,11 +32,12 @@ then
 	echo "Usage: `basename $0 $1` db-name db-username"
 	echo "Example: `basename $0 $1` tsearch wiseleyb"
 	echo "     would setup database tsearch for database username wiseleyb"
-	echo "Note: the username and database need to exist"
 	exit $E_NOARGS
 fi
 
-echo "grant all on database $db to $un;
+echo "create user $un;
+alter user $un with password '$un';
+grant all on database $db to $un;
 grant all on public.pg_ts_cfg to $un;
 grant all on public.pg_ts_cfgmap to $un; 
 grant all on public.pg_ts_dict to $un; 
@@ -52,11 +53,5 @@ psql $db < $sqlfile
 # Grant permissions
 #
 psql $db < tmp_db_setup_grant_file.sql
-
-#
-# Fix template1
-#
-psql template1 < $sqlfile
-
 EOF
 rm tmp_db_setup_grant_file.sql
