@@ -326,13 +326,12 @@ class ActsAsTsearchTest < Test::Unit::TestCase
       assert_equal 'Bob eats lunch', c[0].blog_entry.title
   end
 
-  # Currently fails, needs fixing
-  # def test_find_using_include_option
-  #     BlogComment.acts_as_tsearch :fields => %w{name}
-  #     BlogComment.update_vectors
-  # 
-  #     c = BlogComment.find_by_tsearch('jim', :include => :blog_entry)
-  #     assert_equal 2, c.size
-  #     assert_equal 'Bob eats lunch', c[0].blog_entry.title
-  # end
+  def test_find_using_include_option
+      BlogComment.acts_as_tsearch :fields => %w{name}
+      BlogComment.update_vectors
+  
+      c = BlogComment.find_by_tsearch('jim', :include => :blog_entry)
+      assert_equal 2, c.size
+      assert_equal 'Bob eats lunch', c[0].blog_entry.title
+  end
 end

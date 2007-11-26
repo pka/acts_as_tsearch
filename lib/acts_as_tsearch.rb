@@ -138,7 +138,8 @@ module TsearchMixin
           search_string = fix_tsearch_query(search_string) if tsearch_options[:fix_query] == true
           
           #add tsearch_rank to fields returned
-          select_part = "rank_cd(#{table_name}.#{tsearch_options[:vector]},tsearch_query) as tsearch_rank"
+          tsearch_rank_function = "rank_cd(#{table_name}.#{tsearch_options[:vector]},tsearch_query)"
+          select_part = "#{tsearch_rank_function} as tsearch_rank"
           if options[:select]
             if options[:select].downcase != "count(*)"
               options[:select] << ", #{select_part}"
@@ -172,7 +173,11 @@ module TsearchMixin
           
           order_part = "tsearch_rank desc"
           if !options[:order]
-            options[:order] = order_part
+            # Note if the :include option to ActiveRecord::Base.find is used, the :select option is ignored
+            # (in ActiveRecord::Associations.construct_finder_sql_with_included_associations),
+            # so the 'tsearch_rank' function def above doesn't make it into the generated SQL, and the order
+            # by tsearch_rank fails. So we have to provide that function here, in the order_by clause.
+            options[:order] = (options.has_key?(:include) ? tsearch_rank_function : order_part)
           end
           
           #add a limit if missing
