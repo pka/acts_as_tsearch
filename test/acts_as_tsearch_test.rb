@@ -111,10 +111,19 @@ class ActsAsTsearchTest < Test::Unit::TestCase
 
     BlogEntry.update_vectors
     
+    assert_nothing_raised do
+      b = BlogEntry.find(1)
+      b.title = "Bob ate lunch today"
+      b.save!
+    end
+    
     b = BlogEntry.find_by_tsearch("bob")[0]
     assert b.id == 1, b.to_yaml
 
     b = BlogEntry.find_by_tsearch("see")[0]
+    assert b.id == 1, b.to_yaml
+
+    b = BlogEntry.find_by_tsearch("ate today")[0]
     assert b.id == 1, b.to_yaml
 
     b = BlogEntry.find_by_tsearch("zippy")[0]
@@ -122,7 +131,6 @@ class ActsAsTsearchTest < Test::Unit::TestCase
     
     b = BlogEntry.find_by_tsearch("crack")[0]
     assert b.id == 2, b.to_yaml
-    
     
   end
 

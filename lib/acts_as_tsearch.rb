@@ -328,7 +328,7 @@ module TsearchMixin
               end
             end
             if !row_id.nil?
-              where_arr << "id = #{row_id}"
+              where_arr << "#{table_name}.id = #{row_id}"
             end
             if where_arr.size > 0
               sql << " where " + where_arr.join(" and ")
