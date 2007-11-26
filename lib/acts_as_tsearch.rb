@@ -130,7 +130,7 @@ module TsearchMixin
           raise "Vector [#{tsearch_options[:vector].intern}] not found 
                   in acts_as_tsearch config: #{@tsearch_config.to_yaml}
                   " if !@tsearch_config.keys.include?(tsearch_options[:vector].intern)
-          tsearch_options[:fix_query] = true unless tsearch_options[:fix_query]
+          tsearch_options[:fix_query] = true if tsearch_options[:fix_query].nil?
 
           locale = @tsearch_config[tsearch_options[:vector].intern][:locale]
           check_for_vector_column(tsearch_options[:vector])
