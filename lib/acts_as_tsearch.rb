@@ -121,6 +121,8 @@ module TsearchMixin
         #TODO:  Not sure how to handle order... current we add to it if it exists but this might not
         #be the right thing to do
         def find_by_tsearch(search_string, options = nil, tsearch_options = nil)
+          raise ActiveRecord::RecordNotFound, "Couldn't find #{name} without a search string" if search_string.nil? || search_string.empty?
+
           options = {} if options.nil?
           tsearch_options = {} if tsearch_options.nil?
           #assume vector column is named "vectors" unless otherwise specified

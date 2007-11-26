@@ -28,6 +28,19 @@ class ActsAsTsearchTest < Test::Unit::TestCase
   def test_is_db_working
     assert BlogEntry.count > 0
   end
+
+  def test_empty_search
+    BlogEntry.acts_as_tsearch :fields => "title"
+    BlogEntry.update_vectors
+
+    assert_raise ActiveRecord::RecordNotFound do
+      b = BlogEntry.find_by_tsearch(nil)
+    end
+
+    assert_raise ActiveRecord::RecordNotFound do
+      b = BlogEntry.find_by_tsearch("")
+    end
+  end
   
   # Do the most basic search
   def test_simple_search
