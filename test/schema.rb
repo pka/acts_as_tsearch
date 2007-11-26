@@ -2,7 +2,7 @@ ActiveRecord::Schema.define(:version => 1) do
   
   # Create tables for testing your plugin
 
-   ["blog_entries", "blog_comments", "profiles"].each do |t|
+   %w{blog_entries_profiles blog_entries blog_comments profiles}.each do |t|
      begin
        drop_table t
      rescue
@@ -28,4 +28,8 @@ ActiveRecord::Schema.define(:version => 1) do
      t.column :private_info,   :string
    end
 
+   create_table :blog_entries_profiles, :id => false do |t|
+     t.column :blog_entry_id, :integer
+     t.column :profile_id, :integer
+   end
 end

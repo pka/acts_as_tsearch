@@ -157,9 +157,9 @@ module TsearchMixin
           #add tsearch_query to from
           from_part = "to_tsquery('#{locale}','#{search_string}') as tsearch_query"
           if options[:from]
-            options[:from] << ", #{from_part}"
+            options[:from] = "#{from_part}, #{options[:from]}"
           else
-            options[:from] = "#{table_name}, #{from_part}"
+            options[:from] = "#{from_part}, #{table_name}"
           end
           
           #add vector condition

@@ -279,5 +279,60 @@ class ActsAsTsearchTest < Test::Unit::TestCase
     assert_equal 'searching&for&something|not',            BlogEntry.fix_tsearch_query('searching for AND something OR not')
     assert_equal 'word&(some&phrase)&!this&that|(it&was)', BlogEntry.fix_tsearch_query('word +"some phrase" -this and that or "it was')
   end
+
+  def test_association_query_belongs_to
+      BlogComment.acts_as_tsearch :fields => 'comment'
+      BlogComment.update_vectors
+      
+      e = BlogComment.find_by_tsearch('nice')[0].blog_entry
+      assert e.description.match(/while eating lunch/)
+  end
   
+  def test_association_query_has_many
+      BlogComment.acts_as_tsearch :fields => %w{name comment}
+      BlogComment.update_vectors
+      
+      c = BlogEntry.find(1).blog_comments.find_by_tsearch("really AND jim")
+      assert_equal 1, c.size, BlogEntry.find(1).blog_comments.inspect
+      assert c[0].comment.match(/^Really great/), c.inspect
+  end
+  
+  def test_association_query_has_and_belongs_to_many
+      Profile.find(1).blog_entries << BlogEntry.find(2)
+      BlogEntry.acts_as_tsearch :fields => 'description'
+      BlogEntry.update_vectors
+
+      # without tsearch
+      e = Profile.find(1).blog_entries.find(:all)
+      assert_equal 1, e.size
+      assert_equal 'Zippy', e[0].title
+
+      # with tsearch
+      e = Profile.find(1).blog_entries.find_by_tsearch('zippy')
+      assert_equal 1, e.size
+      assert_equal 'Zippy', e[0].title
+  end
+
+  def test_find_using_joins_option
+      BlogComment.acts_as_tsearch :fields => %w{name}
+      BlogComment.update_vectors
+
+      # :joins is a seldom used .find option, that lets you add joins to the FROM clause,
+      # e.g. if your tables are related by something other than PK.
+      # This test case is an unconvincing example of the need for :joins :)
+      c = BlogComment.find_by_tsearch('jim', :joins => 'JOIN blog_entries ON blog_entries.id = blog_comments.blog_entry_id')
+
+      assert_equal 2, c.size
+      assert_equal 'Bob eats lunch', c[0].blog_entry.title
+  end
+
+  # Currently fails, needs fixing
+  # def test_find_using_include_option
+  #     BlogComment.acts_as_tsearch :fields => %w{name}
+  #     BlogComment.update_vectors
+  # 
+  #     c = BlogComment.find_by_tsearch('jim', :include => :blog_entry)
+  #     assert_equal 2, c.size
+  #     assert_equal 'Bob eats lunch', c[0].blog_entry.title
+  # end
 end
