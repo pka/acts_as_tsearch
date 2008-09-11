@@ -152,6 +152,7 @@ class ActsAsTsearchTest < Test::Unit::TestCase
   def test_count_by_search
     BlogEntry.acts_as_tsearch :fields => "title"
     BlogEntry.update_vectors
+    
     assert BlogEntry.count_by_tsearch("bob") == 1
     assert BlogEntry.count_by_tsearch("bob or zippy") == 2
     assert BlogEntry.count_by_tsearch("bob and opera") == 0
