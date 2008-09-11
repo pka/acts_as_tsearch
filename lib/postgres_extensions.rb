@@ -97,7 +97,7 @@ module ActiveRecord
           when /boolean/i
             :boolean
           when /tsvector/i
-            :string
+            :text
           when /regprocedure/i
             :string
         end
