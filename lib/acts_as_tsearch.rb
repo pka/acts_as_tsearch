@@ -182,8 +182,10 @@ module TsearchMixin
           
           #add vector condition
           where_part = "#{table_name}.#{tsearch_options[:vector]} @@ tsearch_query"
-          if options[:conditions]
+          if options[:conditions] and options[:conditions].is_a? String
             options[:conditions] << " and #{where_part}"
+          elsif options[:conditions] and options[:conditions].is_a? Array
+            options[:conditions].first << " and #{where_part}"
           else
             options[:conditions] = where_part
           end
