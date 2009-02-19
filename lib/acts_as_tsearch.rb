@@ -197,7 +197,7 @@ module TsearchMixin
           end
           
           #finally - return results
-          find(:all, options).paginate(:page => page)
+          find(:all, options)
           # find(:all,
           #   :select => "#{table_name}.*, rank_cd(blogger_groups.vectors, query) as rank",
           #   :from => "#{table_name}, to_tsquery('default','#{search_string}') as query",
