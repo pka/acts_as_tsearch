@@ -3,8 +3,10 @@ module ActiveRecord
 
     class PostgreSQLAdapter < AbstractAdapter
       
+      alias_method :native_database_types_base, :native_database_types
+
       def native_database_types #:nodoc:
-        NATIVE_DATABASE_TYPES.merge(
+        native_database_types_base.merge(
           {
             :tsvector    => { :name => "tsvector"},
             :regprocedure =>{ :naem => "regprocedure"}
