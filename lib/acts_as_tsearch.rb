@@ -175,7 +175,7 @@ module TsearchMixin
             # (in ActiveRecord::Associations.construct_finder_sql_with_included_associations),
             # so the 'tsearch_rank' function def above doesn't make it into the generated SQL, and the order
             # by tsearch_rank fails. So we have to provide that function here, in the order_by clause.
-            options[:order] = (options.has_key?(:include) ? tsearch_rank_function : order_part)
+            options[:order] = (options.has_key?(:include) ? "#{tsearch_rank_function} desc" : order_part)
           end
           options
         end
