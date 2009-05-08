@@ -13,8 +13,10 @@ module ActiveRecord
       end
       
     
-    class Column
+    class PostgreSQLColumn < Column #:nodoc:
       private
+        alias_method :simplified_type_base, :simplified_type
+
         # Maps PostgreSQL-specific data types to logical Rails types.
         def simplified_type(field_type)
           case field_type
@@ -23,7 +25,7 @@ module ActiveRecord
             when /regprocedure/i
               :string
             else
-              super
+              simplified_type_base(field_type)
           end
         end
     end
