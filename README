@@ -33,3 +33,8 @@ For Postgres 8.2 and older follow http://code.google.com/p/acts-as-tsearch/wiki/
   puts blog_entries.size
   puts blog_entries[0].title
   ...etc...
+
+or using scopes:
+
+  blog_entry = BlogEntry.scoped_by_tsearch("bob").find(:first)
+
