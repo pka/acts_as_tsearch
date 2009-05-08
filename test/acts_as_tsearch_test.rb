@@ -18,8 +18,6 @@ require File.dirname(__FILE__) + '/test_helper'
 
 class ActsAsTsearchTest < Test::Unit::TestCase
 
-  fixtures :blog_entries, :blog_comments, :profiles
-
   def setup
     create_fixtures(:blog_entries, :blog_comments, :profiles)
   end  
