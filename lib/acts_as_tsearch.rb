@@ -102,30 +102,10 @@ module TsearchMixin
 
       module SingletonMethods
 
-        #Finds a tsearch2 formated query in the tables vector column and adds
-        #tsearch_rank to the results
-        #
-        #Inputs:
-        #   search_string:  just about anything.  If you want to run a tsearch styled query 
-        #                   (see http://mira.sai.msu.su/~megera/pgsql/ftsdoc/fts-query.html for 
-        #                   details on this) just set fix_query = false.  
-        #
-        #   options: standard ActiveRecord find options - see http://api.rubyonrails.com/classes/ActiveRecord/Base.html#M000989
-        #
-        #   headlines:  TSearch2 can generate snippets of text with words found highlighted.  Put in the column names 
-        #               of any of the columns in your vector and they'll come back as "{column_name}_headline"
-        #               These are pretty expensive to generate - so only use them if you need them.
-        #               example:  pass this [%w{title description}]
-        #                         get back this result.title_headline, result.description_headline
-        #
-        #   fix_query:  the default will automatically try to fix your query with the fix_tsearch_query function
-        #
-        #   locals:  TODO:  Document this... see
-        #                  http://www.sai.msu.su/~megera/postgres/gist/tsearch/V2/docs/tsearch-V2-intro.html for details
-        #
+        #Find options for a tsearch2 formated query
         #TODO:  Not sure how to handle order... current we add to it if it exists but this might not
         #be the right thing to do
-        def find_by_tsearch(search_string, options = nil, tsearch_options = nil)
+        def find_by_tsearch_options(search_string, options = nil, tsearch_options = nil)
           raise ActiveRecord::RecordNotFound, "Couldn't find #{name} without a search string" if search_string.nil? || search_string.empty?
 
           options = {} if options.nil?
@@ -197,8 +177,32 @@ module TsearchMixin
             # by tsearch_rank fails. So we have to provide that function here, in the order_by clause.
             options[:order] = (options.has_key?(:include) ? tsearch_rank_function : order_part)
           end
+          options
+        end
           
-          #finally - return results
+        #Finds a tsearch2 formated query in the tables vector column and adds
+        #tsearch_rank to the results
+        #
+        #Inputs:
+        #   search_string:  just about anything.  If you want to run a tsearch styled query 
+        #                   (see http://mira.sai.msu.su/~megera/pgsql/ftsdoc/fts-query.html for 
+        #                   details on this) just set fix_query = false.  
+        #
+        #   options: standard ActiveRecord find options - see http://api.rubyonrails.com/classes/ActiveRecord/Base.html#M000989
+        #
+        #   headlines:  TSearch2 can generate snippets of text with words found highlighted.  Put in the column names 
+        #               of any of the columns in your vector and they'll come back as "{column_name}_headline"
+        #               These are pretty expensive to generate - so only use them if you need them.
+        #               example:  pass this [%w{title description}]
+        #                         get back this result.title_headline, result.description_headline
+        #
+        #   fix_query:  the default will automatically try to fix your query with the fix_tsearch_query function
+        #
+        #   locals:  TODO:  Document this... see
+        #                  http://www.sai.msu.su/~megera/postgres/gist/tsearch/V2/docs/tsearch-V2-intro.html for details
+        #
+        def find_by_tsearch(search_string, options = nil, tsearch_options = nil)
+          options = find_by_tsearch_options(search_string, options, tsearch_options)
           find(:all, options)
           # find(:all,
           #   :select => "#{table_name}.*, rank_cd(blogger_groups.vectors, query) as rank",
@@ -208,7 +212,15 @@ module TsearchMixin
           #   :limit => 100)
         end
         
-
+        # Return a scope instead of an array. This has several advantages:
+        # * We can combine it with other named scopes
+        # * It loads lazy
+        # * Pagination with will_paginate can be calculated on db layer and not on a collection
+        def scoped_by_tsearch(search_string, options = nil, tsearch_options = nil)
+          options = find_by_tsearch_options(search_string, options, tsearch_options)
+          scoped(options)
+        end
+        
         def count_by_tsearch(search_string, options = {}, tsearch_options = {})
             options[:select] = "count(*)"
             options[:order] = "1 desc"

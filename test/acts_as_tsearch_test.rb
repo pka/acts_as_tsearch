@@ -48,6 +48,13 @@ class ActsAsTsearchTest < Test::Unit::TestCase
     assert b.id == 1, b.to_yaml
   end
 
+  def test_scoped_search
+    BlogEntry.acts_as_tsearch :fields => "title"
+    BlogEntry.update_vectors
+    b = BlogEntry.scoped_by_tsearch("bob").find(:first)
+    assert b.id == 1, b.to_yaml
+  end
+
   # Do a simple multi-field search
   def test_simple_two_field
     BlogEntry.acts_as_tsearch :fields => [:title, :description]
